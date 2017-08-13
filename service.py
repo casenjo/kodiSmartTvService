@@ -22,21 +22,11 @@ if __name__ == '__main__':
 
     tvWakeupMonitor = TvWakeupMonitor()
 
-    #
-    # monitor = xbmc.Monitor()
-    #
+    # Toggle screensaver for faster debugging
     xbmc.executebuiltin('ActivateScreensaver')
-    #
+
     while not tvWakeupMonitor.abortRequested():
         # Sleep/wait for abort for 2 seconds
         if tvWakeupMonitor.waitForAbort(2):
             # Abort was requested while waiting. We should exit
             break
-        xbmc.log(name + ": Sanity check passed", level=xbmc.LOGDEBUG)
-
-
-
-
-
-
-
