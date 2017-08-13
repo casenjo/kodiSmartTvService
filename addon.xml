@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.tv.wakeup" name="TV Wakeup" version="1.0.1" provider-name="casenjo">
-	<requires>
-		<import addon="xbmc.python" version="2.14.0"/>
-		<import addon="script.module.requests" version="2.12.4" />
-	</requires>
-	<extension point="xbmc.python.script" library="addon.py">
-		<provides>executable</provides>
-	</extension>
-	<extension point="xbmc.addon.metadata">
-		<platform>all</platform>
-		<summary lang="en">Wake up TV when waking up Kodi</summary>
-		<description lang="en">It'll wake up the TV</description>
-		<license>GNU General Public License, v2</license>
-		<language></language>
-		<source>https://github.com/zag2me/script.hello.world</source>
-		<website>Kodi.tv</website>
-		<email>zag@kodi.org</email>
-		<assets>
-			<icon>icon.png</icon>
-			<fanart>fanart.jpg</fanart>
-			<screenshot>resources/screenshot-01.jpg</screenshot>
-			<screenshot>resources/screenshot-02.jpg</screenshot>
-			<screenshot>resources/screenshot-03.jpg</screenshot>
-		</assets>
-		<news>Updated the addon to use new addon.xml metadata</news>
-	</extension>
+<addon id="service.tv.wakeup"
+       name="Bravia TV Wakeup"
+       version="1.0.0"
+       provider-name="casenjo">
+  <requires>
+    <import addon="xbmc.python" version="2.14.0"/>
+	<import addon="script.module.requests" version="2.12.4" />
+  </requires>
+  <extension point="xbmc.service" library="service.py" start="startup" />
+  <extension point="xbmc.addon.metadata">
+    <source>https://github.com/casenjo/kodiSmartTvService</source>
+    <platform>all</platform>
+    <summary lang="en">Wake up TV when waking up Kodi</summary>
+  </extension>
 </addon>

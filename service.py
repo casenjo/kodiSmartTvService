@@ -1,29 +1,38 @@
 import os
 import sys
+import time
 import xbmc
 import xbmcgui
 import xbmcaddon
 import requests
 
-from lib import braviarc
+name = u"Bravia TV Wakeup Service"
 
-braviarc = braviarc.BraviaRC()
-pin = u'5285'
-braviarc.connect(pin, u'koditvwakeup', u'Kodi')
 
-dialog = xbmcgui.Dialog()
+class TvWakeupMonitor(xbmc.Monitor):
+    def __init__(self):
+        xbmc.log("2 " + name + " (TV Wakeup Monitor): starting", level=xbmc.LOGDEBUG)
 
-xbmc.executebuiltin('ActivateScreensaver')
+    def onScreensaverDeactivated(self):
+        xbmc.log("3 " + name + " (TV Wakeup Monitor): screensaver deactivated", level=xbmc.LOGDEBUG)
+        xbmc.log(name + " (TV Wakeup Monitor): DO CHECKS FOR TV STATUS HERE", level=xbmc.LOGDEBUG)
 
-if braviarc.get_power_status() == u'standby':
-    dialog.notification('test', 'turning on')
-    braviarc.turn_on()
-else:
-    playing_content = braviarc.get_playing_info()
-    if playing_content.get('title') != u'HDMI 1':
-        braviarc.select_source('HDMI 1')
-    # dialog.notification('test', 'turning off')
-    # braviarc.turn_off()
+if __name__ == '__main__':
+    xbmc.log("1 " + name + ": Starting", level=xbmc.LOGDEBUG)
+
+    tvWakeupMonitor = TvWakeupMonitor()
+
+    #
+    # monitor = xbmc.Monitor()
+    #
+    xbmc.executebuiltin('ActivateScreensaver')
+    #
+    while not tvWakeupMonitor.abortRequested():
+        # Sleep/wait for abort for 2 seconds
+        if tvWakeupMonitor.waitForAbort(2):
+            # Abort was requested while waiting. We should exit
+            break
+        xbmc.log(name + ": Sanity check passed", level=xbmc.LOGDEBUG)
 
 
 
