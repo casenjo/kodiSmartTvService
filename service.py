@@ -9,7 +9,6 @@ from lib import braviarc
 
 name = u"Bravia TV Wakeup Service"
 
-
 # Extend the xbmc.Monitor class to do our bidding
 class TvWakeupMonitor(xbmc.Monitor):
     def __init__(self):
@@ -24,12 +23,11 @@ class TvWakeupMonitor(xbmc.Monitor):
         if self.braviarc.get_power_status() == u'standby':
             self.dialog.notification('test', 'turning on')
             self.braviarc.turn_on()
-        else:
-            playing_content = self.braviarc.get_playing_info()
-            if playing_content.get('title') != u'HDMI 1':
-                self.braviarc.select_source('HDMI 1')
-            # self.dialog.notification('test', 'turning off')
-            # self.braviarc.turn_off()
+            xbmc.sleep(2000);
+
+        playing_content = self.braviarc.get_playing_info()
+        if playing_content.get('title') != u'HDMI 1':
+            self.braviarc.select_source('HDMI 1')
 
 # Service entry point
 if __name__ == '__main__':
