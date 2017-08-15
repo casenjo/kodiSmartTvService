@@ -25,6 +25,7 @@ class TvMonitor(xbmc.Monitor):
         self.pin = serviceTvPin
         self.braviarc.connect(self.pin, serviceClientId, serviceNickname)
         self.timeScreensaverActivated = 0
+        self.TIME_TO_TV_SLEEP = (60 * 5)
 
     def onScreensaverDeactivated(self):
         xbmc.log("3 " + serviceName + " (TV Monitor): screensaver deactivated", level=xbmc.LOGDEBUG)
@@ -56,7 +57,7 @@ class TvMonitor(xbmc.Monitor):
             xbmc.log("5 " + serviceName + " (TV Monitor): Going to sleep", level=xbmc.LOGDEBUG)
             currentTime = time.time()
             playing_content = self.braviarc.get_playing_info()
-            if playing_content.get('title') == u'HDMI 1' and ((currentTime - self.timeScreensaverActivated) > 10):
+            if playing_content.get('title') == u'HDMI 1' and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
                 self.braviarc.turn_off()
 
 # Service entry point
