@@ -13,8 +13,8 @@ serviceClientId = u'koditvwakeup'
 serviceNickname = u'Kodi'
 serviceTvPin = u'PIN_HERE'
 
-tvIp = u'IP_HERE'
-tvMac = u'MAC_HERE'
+tvIp = u'TV_IP_HERE'
+tvMac = u'TV_MAC_HERE'
 
 # Extend the xbmc.Monitor class to do our bidding
 class TvMonitor(xbmc.Monitor):
@@ -24,6 +24,7 @@ class TvMonitor(xbmc.Monitor):
         self.braviarc = braviarc.BraviaRC(tvIp, tvMac)
         self.pin = serviceTvPin
         self.braviarc.connect(self.pin, serviceClientId, serviceNickname)
+        self.timeScreensaverActivated = 0
 
     def onScreensaverDeactivated(self):
         xbmc.log("3 " + serviceName + " (TV Monitor): screensaver deactivated", level=xbmc.LOGDEBUG)
@@ -40,6 +41,24 @@ class TvMonitor(xbmc.Monitor):
             self.braviarc.select_source('HDMI 1')
         # section setToKodiSource
 
+    def tvIsOff(self):
+        return self.braviarc.get_power_status() == u'standby'
+
+    def tvIsOn(self):
+        return self.braviarc.get_power_status() == u'active'
+
+    def onScreensaverActivated(self):
+        xbmc.log("4 " + serviceName + " (TV Monitor): screensaver activated", level=xbmc.LOGDEBUG)
+        self.timeScreensaverActivated = time.time()
+
+    def checkIfTimeToSleep(self):
+        if self.tvIsOn() and xbmc.getCondVisibility("System.ScreenSaverActive"):
+            xbmc.log("5 " + serviceName + " (TV Monitor): Going to sleep", level=xbmc.LOGDEBUG)
+            currentTime = time.time()
+            playing_content = self.braviarc.get_playing_info()
+            if playing_content.get('title') == u'HDMI 1' and ((currentTime - self.timeScreensaverActivated) > 10):
+                self.braviarc.turn_off()
+
 # Service entry point
 if __name__ == '__main__':
     xbmc.log("1 " + serviceName + ": Starting", level=xbmc.LOGDEBUG)
@@ -54,3 +73,4 @@ if __name__ == '__main__':
         if tvMonitor.waitForAbort(2):
             # Abort was requested while waiting. We should exit
             break
+        tvMonitor.checkIfTimeToSleep()
