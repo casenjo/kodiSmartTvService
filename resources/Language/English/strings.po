@@ -27,3 +27,7 @@ msgstr "TV IP Address"
 msgctxt "#31200"
 msgid "TV Mac Address"
 msgstr "TV Mac Address"
+
+msgctxt "#31300"
+msgid "TV PIN"
+msgstr "TV PIN"

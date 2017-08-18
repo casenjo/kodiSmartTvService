@@ -11,21 +11,36 @@ serviceName = u"Bravia TV Service"
 
 serviceClientId = u'koditvwakeup'
 serviceNickname = u'Kodi'
-serviceTvPin = u'PIN_HERE'
-
-tvIp = u'TV_IP_HERE'
-tvMac = u'TV_MAC_HERE'
+serviceTvPin = u'6476'
 
 # Extend the xbmc.Monitor class to do our bidding
 class TvMonitor(xbmc.Monitor):
     def __init__(self):
         xbmc.log("2 " + serviceName + " (TV Monitor): starting", level=xbmc.LOGDEBUG)
+        self.addon = xbmcaddon.Addon('service.tv.wakeup')
         self.dialog = xbmcgui.Dialog()
-        self.braviarc = braviarc.BraviaRC(tvIp, tvMac)
-        self.pin = serviceTvPin
-        self.braviarc.connect(self.pin, serviceClientId, serviceNickname)
-        self.timeScreensaverActivated = 0
-        self.TIME_TO_TV_SLEEP = (60 * 5)
+
+        self.tvIp = self.addon.getSetting('tvIpAddress')
+        self.tvMacAddress = self.addon.getSetting('tvMacAddress')
+        self.tvPin = self.addon.getSetting('tvPin')
+
+        if self.tvIp == '':
+            self.dialog.notification(serviceName, 'TV IP address not configured', xbmcgui.NOTIFICATION_ERROR)
+            self.isRunning = False
+        if self.tvMacAddress == '':
+            self.dialog.notification(serviceName, 'TV MAC address not configured', xbmcgui.NOTIFICATION_ERROR)
+            self.isRunning = False
+        if self.tvPin == '':
+            self.dialog.notification(serviceName, 'TV PIN not configured', xbmcgui.NOTIFICATION_ERROR)
+            self.isRunning = False
+
+        # self.dialog = xbmcgui.Dialog()
+        # self.timeScreensaverActivated = 0
+        # self.TIME_TO_TV_SLEEP = (60 * 5)
+        # if (self.tvIp != '' and self.tvMacAddress != ''):
+        #     self.braviarc = braviarc.BraviaRC(self.tvIp, self.tvMacAddress)
+        #     self.pin = serviceTvPin
+        #     self.braviarc.connect(self.pin, serviceClientId, serviceNickname)
 
     def onScreensaverDeactivated(self):
         xbmc.log("3 " + serviceName + " (TV Monitor): screensaver deactivated", level=xbmc.LOGDEBUG)
@@ -69,9 +84,10 @@ if __name__ == '__main__':
     # Toggle screensaver for faster debugging
     xbmc.executebuiltin('ActivateScreensaver')
 
-    while not tvMonitor.abortRequested():
+    while not tvMonitor.abortRequested() and not tvMonitor.isRunning:
         # Sleep/wait for abort for 2 seconds
         if tvMonitor.waitForAbort(2):
             # Abort was requested while waiting. We should exit
+            xbmc.log("ABORTING", level=xbmc.LOGDEBUG)
             break
-        tvMonitor.checkIfTimeToSleep()
+        # tvMonitor.checkIfTimeToSleep()
