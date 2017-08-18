@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="31000">
+        <setting label="31100" type="ipaddress" id="TV IP Address" />
+        <setting label="31200" type="text" id="TV MAC Address" />
+    </category>
+</settings>
