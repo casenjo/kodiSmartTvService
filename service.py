@@ -112,7 +112,7 @@ class TvMonitor(xbmc.Monitor):
 
     def onScreensaverDeactivated(self):
         xbmc.log(serviceName + " (TV Monitor): Screensaver deactivated", level=xbmc.LOGDEBUG)
-        self.wakeupTv()
+        self.wakeUpTv()
         self.setTvToKodiInput()
 
     # Wake up our TV
@@ -150,6 +150,8 @@ class TvMonitor(xbmc.Monitor):
         self.timeScreensaverActivated = int(time.time())
 
     def checkIfTimeToSleep(self):
+        if self.tvIsOff():
+            self.resetScreensaverActivationTime()
         if self.tvIsOn() and xbmc.getCondVisibility("System.ScreenSaverActive"):
             xbmc.log(serviceName + " (TV Monitor): Checking if going to sleep", level=xbmc.LOGDEBUG)
             currentTime = int(time.time())
