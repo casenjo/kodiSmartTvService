@@ -152,22 +152,24 @@ class TvMonitor(xbmc.Monitor):
     def isTvSetToKodiInput(self):
         return self.getTvInput() == self.tvInput
 
-    def checkIfTimeToSleep(self):
+    def isTimeToSleep(self):
+        currentTime = int(time.time())
+        return (currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP
 
-        if
+    def checkIfTimeToSleep(self):
+        xbmc.log(serviceName + " (TV Monitor): Checking if going to sleep", level=xbmc.LOGDEBUG)
         if self.tvIsOff():
             self.resetScreensaverActivationTime()
         if xbmc.getCondVisibility("System.ScreenSaverActive") and self.tvIsOn():
-            xbmc.log(serviceName + " (TV Monitor): Checking if going to sleep", level=xbmc.LOGDEBUG)
-            currentTime = int(time.time())
 
-            if self.isTvSetToKodiInput() and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
+            if self.isTvSetToKodiInput() and self.isTimeToSleep():
                 xbmc.log(serviceName + " (TV Monitor): Input is " + self.tvInput + " and its past our bedtime, going to sleep", level=xbmc.LOGDEBUG)
-                self.braviarc.turn_off()
+                xbmc.log(serviceName + " (TV Monitor): TURNING OFF NOW", level=xbmc.LOGDEBUG)
+                # self.braviarc.turn_off()
 
             # Reset the screensaver activated time because we're using another input and if
             # we switch inputs manually afterwards, the TV will turn off almost instantly lol
-            if playing_content.get('title') != self.tvInput:
+            if not self.isTvSetToKodiInput():
                 xbmc.log(serviceName + " (TV Monitor): Input is not " + self.tvInput + ", resetting timer", level=xbmc.LOGDEBUG)
                 self.resetScreensaverActivationTime()
 
