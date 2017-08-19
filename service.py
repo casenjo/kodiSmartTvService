@@ -44,8 +44,7 @@ class TvMonitor(xbmc.Monitor):
 
     def connectToTv(self):
         utils.log("Connecting to TV")
-        self.braviarc.connect(self.tvPin, serviceClientId, utils.getAddOnName())
-        self.isConnected = True
+        return self.braviarc.connect(self.tvPin, serviceClientId, utils.getAddOnName())
 
     # Configure TV connection
     def configureTvConnection(self):
@@ -76,7 +75,7 @@ class TvMonitor(xbmc.Monitor):
             utils.setSetting('tvPin', pinFromTv)
             self.tvPin = utils.getSetting('tvPin')
             utils.log("New PIN is " + self.tvPin)
-            self.connectToTv()
+            self.isConnected = self.connectToTv()
 
     # Check configured PIN isn't the default
     def pinIsDefault(self):
