@@ -8,7 +8,7 @@ import requests
 from lib import braviarc
 
 serviceName = u"Kodi Smart TV Service"
-serviceId = u"service.tv.wakeup"
+serviceId = u"service.smarttvservice"
 serviceClientId = u'kodismarttvservice'
 serviceNickname = u'Kodi Smart TV Service'
 
