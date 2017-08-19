@@ -9,8 +9,6 @@ dedicated to Isabel
 from __future__ import absolute_import
 import os
 import sys
-import xbmc
-import xbmcaddon
 import requests
 
 import logging
