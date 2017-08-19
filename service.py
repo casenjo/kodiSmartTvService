@@ -14,7 +14,6 @@ serviceNickname = u'Kodi Smart TV Service'
 
 # Extend the xbmc.Monitor class to do our bidding
 class TvMonitor(xbmc.Monitor):
-    TIME_TO_TV_SLEEP = (60 * 5)  # 5 minutes
 
     def __init__(self):
         xbmc.log(serviceName + " (TV Monitor): Starting", level=xbmc.LOGDEBUG)
@@ -29,6 +28,7 @@ class TvMonitor(xbmc.Monitor):
         self.tvMacAddress = self.addon.getSetting('tvMacAddress')
         self.tvPin = self.addon.getSetting('tvPin')
         self.tvInput = self.getTvInput()
+        self.TIME_TO_TV_SLEEP = (1 * int(self.addon.getSetting('timeUntilSleep')))  # Default is 5 minutes
 
         if not self.configIsValid():
             self.isRunning = False
@@ -154,7 +154,7 @@ class TvMonitor(xbmc.Monitor):
             xbmc.log(serviceName + " (TV Monitor): " + playing_content.get('title'), level=xbmc.LOGDEBUG)
             xbmc.log(serviceName + " (TV Monitor): " + self.tvInput, level=xbmc.LOGDEBUG)
 
-            if playing_content.get('title') == self.tvInput and ((currentTime - self.timeScreensaverActivated) > 5):
+            if playing_content.get('title') == self.tvInput and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
                 xbmc.log(serviceName + " (TV Monitor): Input is HDMI1 and its past our bedtime, going to sleep", level=xbmc.LOGDEBUG)
                 self.braviarc.turn_off()
 
