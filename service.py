@@ -7,10 +7,10 @@ import xbmcaddon
 import requests
 from lib import braviarc
 
-serviceName = u"Bravia TV Service"
+serviceName = u"Kodi TV Wakeup"
 serviceId = u"service.tv.wakeup"
 serviceClientId = u'koditvwakeup'
-serviceNickname = u'Kodi TV Service'
+serviceNickname = u'Kodi TV Wakeup'
 
 # Extend the xbmc.Monitor class to do our bidding
 class TvMonitor(xbmc.Monitor):
@@ -154,7 +154,7 @@ class TvMonitor(xbmc.Monitor):
             xbmc.log(serviceName + " (TV Monitor): " + playing_content.get('title'), level=xbmc.LOGDEBUG)
             xbmc.log(serviceName + " (TV Monitor): " + self.tvInput, level=xbmc.LOGDEBUG)
 
-            if playing_content.get('title') == self.tvInput and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
+            if playing_content.get('title') == self.tvInput and ((currentTime - self.timeScreensaverActivated) > 5):
                 xbmc.log(serviceName + " (TV Monitor): Input is HDMI1 and its past our bedtime, going to sleep", level=xbmc.LOGDEBUG)
                 self.braviarc.turn_off()
 
