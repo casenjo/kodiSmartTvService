@@ -8,6 +8,10 @@ turning off the TV after 5 minutes of inactivity. It will also detect
 when Kodi is woken up and will turn the TV on (if not already on) and
 switch to its Kodi input (if not already on it)
 
+Right now it only works on Sony Bravia TVs. I'm not sure how far back
+it will work, but any Bravia TV since 2015 should be compatible with
+this service.
+
 
 Installation
 ============
