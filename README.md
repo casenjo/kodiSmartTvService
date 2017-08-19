@@ -27,8 +27,8 @@ Usage
 Go to
 Kodi > Add-ons > My Add-ons > Services > Kodi Smart TV Service > Configure
 
-And make sure that the TV's **IP address**, **MAC address** and **input**
-are selected.
+And make sure that the TV's **IP address**, **MAC address** and
+**Input** are selected.
 
 **Do NOT change the PIN unless you've already configured the TV. When
 you first enable the service you will set it.**
