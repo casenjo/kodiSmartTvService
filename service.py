@@ -27,7 +27,7 @@ class TvMonitor(xbmc.Monitor):
         self.tvIp = self.addon.getSetting('tvIpAddress')
         self.tvMacAddress = self.addon.getSetting('tvMacAddress')
         self.tvPin = self.addon.getSetting('tvPin')
-        self.tvInput = self.getTvInput()
+        self.tvInput = self.getTvInputSetting()
         self.TIME_TO_TV_SLEEP = (1 * int(self.addon.getSetting('timeUntilSleep')))  # Default is 5 minutes
 
         if not self.configIsValid():
@@ -41,10 +41,7 @@ class TvMonitor(xbmc.Monitor):
         else:
             self.connectToTv()
 
-    # Translate the choice in the plugin's settings to a valid string to use
-    # with the values the TV works with.
-    # TODO: This is specific to Bravia TVs, should be moved to a Bravia specific class
-    def getTvInput(self):
+    def getTvInputSetting(self):
         input = self.addon.getSetting('tvInput')
         # 0 => HDMI 1, 1 => HDMI 2, etc
         return {
@@ -127,12 +124,12 @@ class TvMonitor(xbmc.Monitor):
     # TODO: This is specific to Bravia TVs, should be moved to a Bravia specific class
     def setTvToKodiInput(self):
         xbmc.log(serviceName + " (TV Monitor): Setting TV to Kodi input", level=xbmc.LOGDEBUG)
-        if self.getTvSource() != self.tvInput:
+        if self.getTvInput() != self.tvInput:
             self.braviarc.select_source(self.tvInput)
 
     # Get our TV's input source
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
-    def getTvSource(self):
+    def getTvInput(self):
         playing_content = self.braviarc.get_playing_info()
         return playing_content.get('title')
 
