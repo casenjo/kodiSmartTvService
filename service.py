@@ -121,11 +121,12 @@ class TvMonitor(xbmc.Monitor):
             xbmc.sleep(2000)
         # section wakeup
 
-        self.setTvToKodiSource()
+        self.setTvToKodiInput()
 
     # Change our TV to the input source in our config
     # TODO: This is specific to Bravia TVs, should be moved to a Bravia specific class
-    def setTvToKodiSource(self):
+    def setTvToKodiInput(self):
+        xbmc.log(serviceName + " (TV Monitor): Setting TV to Kodi input", level=xbmc.LOGDEBUG)
         if self.getTvSource() != self.tvInput:
             self.braviarc.select_source(self.tvInput)
 
@@ -150,9 +151,6 @@ class TvMonitor(xbmc.Monitor):
             xbmc.log(serviceName + " (TV Monitor): Checking if going to sleep", level=xbmc.LOGDEBUG)
             currentTime = time.time()
             playing_content = self.braviarc.get_playing_info()
-
-            xbmc.log(serviceName + " (TV Monitor): " + playing_content.get('title'), level=xbmc.LOGDEBUG)
-            xbmc.log(serviceName + " (TV Monitor): " + self.tvInput, level=xbmc.LOGDEBUG)
 
             if playing_content.get('title') == self.tvInput and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
                 xbmc.log(serviceName + " (TV Monitor): Input is HDMI1 and its past our bedtime, going to sleep", level=xbmc.LOGDEBUG)
