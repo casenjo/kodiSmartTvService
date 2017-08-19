@@ -22,11 +22,11 @@ class TvMonitor(xbmc.Monitor):
         self.dialog = xbmcgui.Dialog()
 
         self.getConfigs()
-        if not self.configIsValid()
+        if not self.configIsValid():
             self.isRunning = False
             return
 
-        
+
 
 
 
