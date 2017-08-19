@@ -6,8 +6,7 @@ import xbmcgui
 import xbmcaddon
 from lib import braviarc, utils
 
-serviceClientId = u'kodismarttvservice'
-serviceNickname = u'Kodi Smart TV Service'
+serviceClientId = u'kodismarttvservice'w
 
 # Extend the xbmc.Monitor class to do our bidding
 class TvMonitor(xbmc.Monitor):
@@ -49,7 +48,7 @@ class TvMonitor(xbmc.Monitor):
 
     def connectToTv(self):
         utils.log("Connecting to TV")
-        self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
+        self.braviarc.connect(self.tvPin, serviceClientId, utils.getAddOnName())
         self.isConnected = True
 
     # Configure TV connection
@@ -66,11 +65,11 @@ class TvMonitor(xbmc.Monitor):
             return
 
         utils.log("Requesting PIN from TV")
-        self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
+        self.braviarc.connect(self.tvPin, serviceClientId, utils.getAddOnName())
         pinFromTv = self.dialog.numeric(0, 'Enter PIN from TV')
         utils.log("PIN " + pinFromTv + " entered")
 
-        self.braviarc.connect(pinFromTv, serviceClientId, serviceNickname)
+        self.braviarc.connect(pinFromTv, serviceClientId, utils.getAddOnName())
 
         if not self.braviarc.is_connected():
             utils.log("PIN incorrect, exiting")
