@@ -16,8 +16,8 @@ this service.
 Installation
 ============
 
-Install the files into a folder called service.tv.wakeup inside your
-Kodi installation's addons folder.
+Install the files into a folder called `service.kodismarttvservice`
+inside your Kodi installation's `addons` folder.
 
 Not a simple installation (yet!), it will be published into the official
 Kodi repo soon :)
