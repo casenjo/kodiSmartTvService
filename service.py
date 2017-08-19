@@ -18,27 +18,23 @@ class TvMonitor(xbmc.Monitor):
 
     def __init__(self):
         xbmc.log(serviceName + " (TV Monitor): Starting", level=xbmc.LOGDEBUG)
+
         self.addon = xbmcaddon.Addon(serviceId)
         self.dialog = xbmcgui.Dialog()
 
-        self.getConfigs()
+
+        self.isRunning = True
+        self.isConnected = False
+        self.timeScreensaverActivated = 0
+        self.tvIp = self.addon.getSetting('tvIpAddress')
+        self.tvMacAddress = self.addon.getSetting('tvMacAddress')
+        self.tvPin = self.addon.getSetting('tvPin')
+
         if not self.configIsValid():
             self.isRunning = False
             return
 
-
-
-
-
-        # self.braviarc = braviarc.BraviaRC(self.tvIp, self.tvMacAddress)
-        # self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
-        # volume_info = self.braviarc.get_volume_info()
-        # xbmc.log(str(volume_info.get(u'volume')), level=xbmc.LOGDEBUG)
-        # self.isRunning = False
-        # return
-
-
-        #start bravia object
+        self.braviarc = braviarc.BraviaRC(self.tvIp, self.tvMacAddress)
 
 
         # section configure service connection
@@ -67,19 +63,15 @@ class TvMonitor(xbmc.Monitor):
                 xbmc.log(serviceName + " (TV Monitor): PIN correct, saving to settings.", level=xbmc.LOGDEBUG)
                 self.addon.setSetting('tvPin', pinFromTv)
                 self.tvPin = self.addon.getSetting('tvPin')
-                self.isRunning = True
-        # section configure service connection
-
-        xbmc.log(serviceName + " (TV Monitor): Connecting to TV.", level=xbmc.LOGDEBUG)
-        self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
-        self.isRunning = True
-
-    def getConfigs(self):
-        self.timeScreensaverActivated = 0
-        self.tvIp = self.addon.getSetting('tvIpAddress')
-        self.tvMacAddress = self.addon.getSetting('tvMacAddress')
-        self.tvPin = self.addon.getSetting('tvPin')
-        xbmc.log(serviceName + " (TV Monitor): TV PIN is " + self.tvPin, level=xbmc.LOGDEBUG)
+                xbmc.log(serviceName + " (TV Monitor): New PIN is " + self.tvPin, level=xbmc.LOGDEBUG)
+                xbmc.log(serviceName + " (TV Monitor): Connecting to TV.", level=xbmc.LOGDEBUG)
+                self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
+                self.isConnected = True
+        else:
+            xbmc.log(serviceName + " (TV Monitor): Connecting to TV.", level=xbmc.LOGDEBUG)
+            self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
+            self.isConnected = True
+            # section configure service connection
 
     # Check configuration to make sure we can make an initial connection to the TV
     def configIsValid(self):
@@ -137,10 +129,11 @@ if __name__ == '__main__':
     # Toggle screensaver for faster debugging
     xbmc.executebuiltin('ActivateScreensaver')
 
-    while not tvMonitor.abortRequested() and not tvMonitor.isRunning:
+    while not tvMonitor.abortRequested() and tvMonitor.isRunning:
         # Sleep/wait for abort for 2 seconds
         if tvMonitor.waitForAbort(2):
             # Abort was requested while waiting. We should exit
             xbmc.log("ABORTING", level=xbmc.LOGDEBUG)
             break
-        tvMonitor.checkIfTimeToSleep()
+        if tvMonitor.isConnected:
+            tvMonitor.checkIfTimeToSleep()
