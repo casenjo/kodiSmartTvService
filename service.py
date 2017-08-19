@@ -35,42 +35,51 @@ class TvMonitor(xbmc.Monitor):
 
         self.braviarc = braviarc.BraviaRC(self.tvIp, self.tvMacAddress)
 
-
-        # section configure service connection
-        if self.tvPin == "0000":
-            xbmc.log(serviceName + " (TV Monitor): Default PIN detected, starting configuration flow", level=xbmc.LOGDEBUG)
-            userWantsToConnect = self.dialog.yesno(serviceName, 'Plugin not connected to the TV. Do you want to connect to it?', 'If yes, be aware that the dialog on the TV might be large and will not let you see the interface to input the PIN.', 'You can use your keyboard to type the code and then press Enter :)')
-
-            if not userWantsToConnect:
-                xbmc.log(serviceName + " (TV Monitor): User denied prompt, exiting.", level=xbmc.LOGDEBUG)
-                self.isRunning = False
-                return
-
-            xbmc.log(serviceName + " (TV Monitor): Requesting PIN from TV.", level=xbmc.LOGDEBUG)
-            self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
-            pinFromTv = self.dialog.numeric(0, 'Enter PIN from TV')
-            xbmc.log(serviceName + " (TV Monitor): PIN " + pinFromTv + " entered", level=xbmc.LOGDEBUG)
-
-            self.braviarc.connect(pinFromTv, serviceClientId, serviceNickname)
-
-            if not self.braviarc.is_connected():
-                xbmc.log(serviceName + " (TV Monitor): PIN incorrect, exiting.", level=xbmc.LOGDEBUG)
-                self.dialog.notification(serviceName, 'PIN incorrect, unable to connect', xbmcgui.NOTIFICATION_ERROR)
-                self.isRunning = False
-                return
-            else:
-                xbmc.log(serviceName + " (TV Monitor): PIN correct, saving to settings.", level=xbmc.LOGDEBUG)
-                self.addon.setSetting('tvPin', pinFromTv)
-                self.tvPin = self.addon.getSetting('tvPin')
-                xbmc.log(serviceName + " (TV Monitor): New PIN is " + self.tvPin, level=xbmc.LOGDEBUG)
-                xbmc.log(serviceName + " (TV Monitor): Connecting to TV.", level=xbmc.LOGDEBUG)
-                self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
-                self.isConnected = True
+        if self.pinIsDefault():
+            self.configureTvConnection()
         else:
-            xbmc.log(serviceName + " (TV Monitor): Connecting to TV.", level=xbmc.LOGDEBUG)
-            self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
-            self.isConnected = True
-            # section configure service connection
+            self.connectToTv()
+
+    def connectToTv(self):
+        xbmc.log(serviceName + " (TV Monitor): Connecting to TV.", level=xbmc.LOGDEBUG)
+        self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
+        self.isConnected = True
+
+    # Configure TV connection
+    def configureTvConnection(self):
+        xbmc.log(serviceName + " (TV Monitor): Default PIN detected, starting configuration flow", level=xbmc.LOGDEBUG)
+        userWantsToConnect = self.dialog.yesno(serviceName,
+                                               'Plugin not connected to the TV. Do you want to connect to it?',
+                                               'If yes, be aware that the dialog on the TV might be large and will not let you see the interface to input the PIN.',
+                                               'You can use your keyboard to type the code and then press Enter :)')
+
+        if not userWantsToConnect:
+            xbmc.log(serviceName + " (TV Monitor): User denied prompt, exiting.", level=xbmc.LOGDEBUG)
+            self.isRunning = False
+            return
+
+        xbmc.log(serviceName + " (TV Monitor): Requesting PIN from TV.", level=xbmc.LOGDEBUG)
+        self.braviarc.connect(self.tvPin, serviceClientId, serviceNickname)
+        pinFromTv = self.dialog.numeric(0, 'Enter PIN from TV')
+        xbmc.log(serviceName + " (TV Monitor): PIN " + pinFromTv + " entered", level=xbmc.LOGDEBUG)
+
+        self.braviarc.connect(pinFromTv, serviceClientId, serviceNickname)
+
+        if not self.braviarc.is_connected():
+            xbmc.log(serviceName + " (TV Monitor): PIN incorrect, exiting.", level=xbmc.LOGDEBUG)
+            self.dialog.notification(serviceName, 'PIN incorrect, unable to connect', xbmcgui.NOTIFICATION_ERROR)
+            self.isRunning = False
+            return
+        else:
+            xbmc.log(serviceName + " (TV Monitor): PIN correct, saving to settings.", level=xbmc.LOGDEBUG)
+            self.addon.setSetting('tvPin', pinFromTv)
+            self.tvPin = self.addon.getSetting('tvPin')
+            xbmc.log(serviceName + " (TV Monitor): New PIN is " + self.tvPin, level=xbmc.LOGDEBUG)
+            self.connectToTv()
+
+    # Check configured PIN isn't the default
+    def pinIsDefault(self):
+        return self.tvPin == "0000"
 
     # Check configuration to make sure we can make an initial connection to the TV
     def configIsValid(self):
