@@ -28,6 +28,7 @@ class TvMonitor(xbmc.Monitor):
         self.tvIp = self.addon.getSetting('tvIpAddress')
         self.tvMacAddress = self.addon.getSetting('tvMacAddress')
         self.tvPin = self.addon.getSetting('tvPin')
+        self.tvInput = self.getTvInput()
 
         if not self.configIsValid():
             self.isRunning = False
@@ -39,6 +40,19 @@ class TvMonitor(xbmc.Monitor):
             self.configureTvConnection()
         else:
             self.connectToTv()
+
+    # Translate the choice in the plugin's settings to a valid string to use
+    # with the values the TV works with.
+    # TODO: This is specific to Bravia TVs, should be moved to a Bravia specific class
+    def getTvInput(self):
+        input = self.addon.getSetting('tvInput')
+        # 0 => HDMI 1, 1 => HDMI 2, etc
+        return {
+            '0': 'HDMI 1',
+            '1': 'HDMI 2',
+            '2': 'HDMI 3',
+            '3': 'HDMI 4'
+        }.get(input, '')  # '' is default if input not found
 
     def connectToTv(self):
         xbmc.log(serviceName + " (TV Monitor): Connecting to TV.", level=xbmc.LOGDEBUG)
@@ -92,6 +106,10 @@ class TvMonitor(xbmc.Monitor):
             xbmc.log(serviceName + " (TV Monitor): Configuration failed, TV MAC is missing", level=xbmc.LOGDEBUG)
             self.dialog.notification(serviceName, 'TV MAC address not configured', xbmcgui.NOTIFICATION_ERROR)
             return False
+        if self.tvInput == '':
+            xbmc.log(serviceName + " (TV Monitor): Configuration failed, TV Input must be selected", level=xbmc.LOGDEBUG)
+            self.dialog.notification(serviceName, 'TV Input must be selected', xbmcgui.NOTIFICATION_ERROR)
+            return False
         xbmc.log(serviceName + " (TV Monitor): Configuration validated!", level=xbmc.LOGDEBUG)
         return True
 
@@ -106,8 +124,8 @@ class TvMonitor(xbmc.Monitor):
 
         # section setToKodiSource
         playing_content = self.braviarc.get_playing_info()
-        if playing_content.get('title') != u'HDMI 1':
-            self.braviarc.select_source('HDMI 1')
+        if playing_content.get('title') != self.tvInput:
+            self.braviarc.select_source(self.tvInput)
         # section setToKodiSource
 
     def tvIsOff(self):
@@ -125,13 +143,17 @@ class TvMonitor(xbmc.Monitor):
             xbmc.log(serviceName + " (TV Monitor): Checking if going to sleep", level=xbmc.LOGDEBUG)
             currentTime = time.time()
             playing_content = self.braviarc.get_playing_info()
-            if playing_content.get('title') == u'HDMI 1' and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
+
+            xbmc.log(serviceName + " (TV Monitor): " + playing_content.get('title'), level=xbmc.LOGDEBUG)
+            xbmc.log(serviceName + " (TV Monitor): " + self.tvInput, level=xbmc.LOGDEBUG)
+
+            if playing_content.get('title') == self.tvInput and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
                 xbmc.log(serviceName + " (TV Monitor): Input is HDMI1 and its past our bedtime, going to sleep", level=xbmc.LOGDEBUG)
                 self.braviarc.turn_off()
 
             # Reset the screensaver activated time because we're using another input and if
             # we switch inputs manually afterwards, the TV will turn off almost instantly lol
-            if playing_content.get('title') != u'HDMI 1':
+            if playing_content.get('title') != self.tvInput:
                 xbmc.log(serviceName + " (TV Monitor): Input is not HDMI1, resetting timer", level=xbmc.LOGDEBUG)
                 self.timeScreensaverActivated = time.time()
 

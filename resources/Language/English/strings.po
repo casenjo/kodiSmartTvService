@@ -31,3 +31,23 @@ msgstr "TV Mac Address"
 msgctxt "#31300"
 msgid "TV PIN"
 msgstr "TV PIN"
+
+msgctxt "#31400"
+msgid "TV Input"
+msgstr "TV Input"
+
+msgctxt "#31401"
+msgid "HDMI 1"
+msgstr "HDMI 1"
+
+msgctxt "#31402"
+msgid "HDMI 2"
+msgstr "HDMI 2"
+
+msgctxt "#31403"
+msgid "HDMI 3"
+msgstr "HDMI 3"
+
+msgctxt "#31404"
+msgid "HDMI 4"
+msgstr "HDMI 4"

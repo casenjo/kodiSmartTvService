@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="31000">
-        <setting label="31100" type="ipaddress" id="tvIpAddress" default="" />
-        <setting label="31200" type="text" id="tvMacAddress" default="" />
-        <setting label="31300" type="text" id="tvPin" default="0000" />
+        <setting label="31100" type="ipaddress" id="tvIpAddress"    default="" />
+        <setting label="31200" type="text"      id="tvMacAddress"   default="" />
+        <setting label="31300" type="text"      id="tvPin"          default="0000" />
+        <setting label="31400" type="select"    id="tvInput"        lvalues="31401|31402|31403|31404" />
     </category>
 </settings>
