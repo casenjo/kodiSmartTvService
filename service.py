@@ -110,7 +110,7 @@ class TvMonitor(xbmc.Monitor):
         return True
 
     def onScreensaverDeactivated(self):
-        xbmc.log(serviceName + " (TV Monitor): Screensaver deactivated", level=xbmc.LOGDEBUG)
+        utils.log("Screensaver deactivated")
         self.wakeUpTv()
         self.setTvToKodiInput()
 
