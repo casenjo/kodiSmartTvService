@@ -6,8 +6,6 @@ import xbmcgui
 import xbmcaddon
 from lib import braviarc, utils
 
-serviceName = u"Kodi Smart TV Service"
-serviceId = u"service.smarttvservice"
 serviceClientId = u'kodismarttvservice'
 serviceNickname = u'Kodi Smart TV Service'
 
@@ -17,17 +15,16 @@ class TvMonitor(xbmc.Monitor):
     def __init__(self):
         utils.log("Monitor starting")
 
-        self.addon = xbmcaddon.Addon(serviceId)
         self.dialog = xbmcgui.Dialog()
 
         self.isRunning = True
         self.isConnected = False
         self.timeScreensaverActivated = 0
-        self.tvIp = self.addon.getSetting('tvIpAddress')
-        self.tvMacAddress = self.addon.getSetting('tvMacAddress')
-        self.tvPin = self.addon.getSetting('tvPin')
+        self.tvIp = utils.getSetting('tvIpAddress')
+        self.tvMacAddress = utils.getSetting('tvMacAddress')
+        self.tvPin = utils.getSetting('tvPin')
         self.tvInput = self.getTvInputSetting()
-        self.TIME_TO_TV_SLEEP = (1 * int(self.addon.getSetting('timeUntilSleep')))  # Default setting is 5 minutes
+        self.TIME_TO_TV_SLEEP = (1 * int(utils.getSetting('timeUntilSleep')))  # Default setting is 5 minutes
 
         if not self.configIsValid():
             self.isRunning = False
@@ -41,7 +38,7 @@ class TvMonitor(xbmc.Monitor):
             self.connectToTv()
 
     def getTvInputSetting(self):
-        input = self.addon.getSetting('tvInput')
+        input = utils.getSetting('tvInput')
         # 0 => HDMI 1, 1 => HDMI 2, etc
         return {
             '0': 'HDMI 1',
@@ -58,7 +55,7 @@ class TvMonitor(xbmc.Monitor):
     # Configure TV connection
     def configureTvConnection(self):
         utils.log("Default PIN detected, starting configuration flow")
-        userWantsToConnect = self.dialog.yesno(serviceName,
+        userWantsToConnect = self.dialog.yesno(utils.getAddOnName(),
                                                'Plugin not connected to the TV. Do you want to connect to it?',
                                                'If yes, be aware that the dialog on the TV might be large and will not let you see the interface to input the PIN.',
                                                'You can use your keyboard to type the code and then press Enter :)')
@@ -77,13 +74,13 @@ class TvMonitor(xbmc.Monitor):
 
         if not self.braviarc.is_connected():
             utils.log("PIN incorrect, exiting")
-            self.dialog.notification(serviceName, 'PIN incorrect, unable to connect', xbmcgui.NOTIFICATION_ERROR)
+            self.dialog.notification(utils.getAddOnName(), 'PIN incorrect, unable to connect', xbmcgui.NOTIFICATION_ERROR)
             self.isRunning = False
             return
         else:
             utils.log("PIN correct, saving to plugin settings")
-            self.addon.setSetting('tvPin', pinFromTv)
-            self.tvPin = self.addon.getSetting('tvPin')
+            utils.setSetting('tvPin', pinFromTv)
+            self.tvPin = utils.getSetting('tvPin')
             utils.log("New PIN is " + self.tvPin)
             self.connectToTv()
 
@@ -96,15 +93,15 @@ class TvMonitor(xbmc.Monitor):
         utils.log("Checking configuration")
         if self.tvIp == '':
             utils.log("Configuration failed, TV IP is missing")
-            self.dialog.notification(serviceName, 'TV IP address not configured', xbmcgui.NOTIFICATION_ERROR)
+            self.dialog.notification(utils.getAddOnName(), 'TV IP address not configured', xbmcgui.NOTIFICATION_ERROR)
             return False
         if self.tvMacAddress == '':
             utils.log("Configuration failed, TV MAC is missing")
-            self.dialog.notification(serviceName, 'TV MAC address not configured', xbmcgui.NOTIFICATION_ERROR)
+            self.dialog.notification(utils.getAddOnName(), 'TV MAC address not configured', xbmcgui.NOTIFICATION_ERROR)
             return False
         if self.tvInput == '':
             utils.log("Configuration failed, TV Input must be selected")
-            self.dialog.notification(serviceName, 'TV Input must be selected', xbmcgui.NOTIFICATION_ERROR)
+            self.dialog.notification(utils.getAddOnName(), 'TV Input must be selected', xbmcgui.NOTIFICATION_ERROR)
             return False
         utils.log("Configuration validated")
         return True
