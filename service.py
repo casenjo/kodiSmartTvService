@@ -121,10 +121,10 @@ class TvMonitor(xbmc.Monitor):
         self.setTvToKodiInput()
 
     # Change our TV to the input source in our config
-    # TODO: This is specific to Bravia TVs, should be moved to a Bravia specific class
+    # TODO: This is too specific to Bravia TVs, should be moved to a Bravia specific class
     def setTvToKodiInput(self):
-        xbmc.log(serviceName + " (TV Monitor): Setting TV to Kodi input", level=xbmc.LOGDEBUG)
         if self.getTvInput() != self.tvInput:
+            xbmc.log(serviceName + " (TV Monitor): Setting TV to Kodi input", level=xbmc.LOGDEBUG)
             self.braviarc.select_source(self.tvInput)
 
     # Get our TV's input source
