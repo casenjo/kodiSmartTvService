@@ -28,7 +28,7 @@ class TvMonitor(xbmc.Monitor):
         self.tvMacAddress = self.addon.getSetting('tvMacAddress')
         self.tvPin = self.addon.getSetting('tvPin')
         self.tvInput = self.getTvInputSetting()
-        self.TIME_TO_TV_SLEEP = (60 * int(self.addon.getSetting('timeUntilSleep')))  # Default is 5 minutes
+        self.TIME_TO_TV_SLEEP = (60 * int(self.addon.getSetting('timeUntilSleep')))  # Default setting is 5 minutes
 
         if not self.configIsValid():
             self.isRunning = False
