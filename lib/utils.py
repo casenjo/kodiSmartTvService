@@ -17,3 +17,15 @@ def getSetting(settingId):
 
 def setSetting(settingId, settingValue):
     return __addOn.setSetting(settingId, settingValue)
+
+def notification(message, type=xbmcgui.NOTIFICATION_INFO):
+    xbmcgui.Dialog().notification(getAddOnName(), message, type)
+
+def notificationError(message):
+    notification(message, xbmcgui.NOTIFICATION_ERROR)
+
+def numberDialog(prompt):
+    xbmcgui.Dialog().numeric(0, prompt)
+
+def yesNoDialog(line1, line2='', line3=''):
+    return xbmcgui.Dialog().yesno(getAddOnName(), line1, line2, line3)

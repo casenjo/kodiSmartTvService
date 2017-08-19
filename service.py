@@ -6,15 +6,13 @@ import xbmcgui
 import xbmcaddon
 from lib import braviarc, utils
 
-serviceClientId = u'kodismarttvservice'w
+serviceClientId = u'kodismarttvservice'
 
 # Extend the xbmc.Monitor class to do our bidding
 class TvMonitor(xbmc.Monitor):
 
     def __init__(self):
         utils.log("Monitor starting")
-
-        self.dialog = xbmcgui.Dialog()
 
         self.isRunning = True
         self.isConnected = False
@@ -54,8 +52,7 @@ class TvMonitor(xbmc.Monitor):
     # Configure TV connection
     def configureTvConnection(self):
         utils.log("Default PIN detected, starting configuration flow")
-        userWantsToConnect = self.dialog.yesno(utils.getAddOnName(),
-                                               'Plugin not connected to the TV. Do you want to connect to it?',
+        userWantsToConnect = utils.yesNoDialog('Plugin not connected to the TV. Do you want to connect to it?',
                                                'If yes, be aware that the dialog on the TV might be large and will not let you see the interface to input the PIN.',
                                                'You can use your keyboard to type the code and then press Enter :)')
 
@@ -66,14 +63,14 @@ class TvMonitor(xbmc.Monitor):
 
         utils.log("Requesting PIN from TV")
         self.braviarc.connect(self.tvPin, serviceClientId, utils.getAddOnName())
-        pinFromTv = self.dialog.numeric(0, 'Enter PIN from TV')
+        pinFromTv = utils.numberDialog('Enter PIN from TV')
         utils.log("PIN " + pinFromTv + " entered")
 
         self.braviarc.connect(pinFromTv, serviceClientId, utils.getAddOnName())
 
         if not self.braviarc.is_connected():
             utils.log("PIN incorrect, exiting")
-            self.dialog.notification(utils.getAddOnName(), 'PIN incorrect, unable to connect', xbmcgui.NOTIFICATION_ERROR)
+            utils.notificationError('PIN incorrect, unable to connect')
             self.isRunning = False
             return
         else:
@@ -92,15 +89,15 @@ class TvMonitor(xbmc.Monitor):
         utils.log("Checking configuration")
         if self.tvIp == '':
             utils.log("Configuration failed, TV IP is missing")
-            self.dialog.notification(utils.getAddOnName(), 'TV IP address not configured', xbmcgui.NOTIFICATION_ERROR)
+            utils.notificationError('TV IP address not configured')
             return False
         if self.tvMacAddress == '':
             utils.log("Configuration failed, TV MAC is missing")
-            self.dialog.notification(utils.getAddOnName(), 'TV MAC address not configured', xbmcgui.NOTIFICATION_ERROR)
+            utils.notificationError('TV MAC address not configured')
             return False
         if self.tvInput == '':
             utils.log("Configuration failed, TV Input must be selected")
-            self.dialog.notification(utils.getAddOnName(), 'TV Input must be selected', xbmcgui.NOTIFICATION_ERROR)
+            utils.notificationError('TV Input must be selected')
             return False
         utils.log("Configuration validated")
         return True
