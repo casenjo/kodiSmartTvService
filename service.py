@@ -117,9 +117,8 @@ class TvMonitor(xbmc.Monitor):
         xbmc.log(serviceName + " (TV Monitor): screensaver deactivated", level=xbmc.LOGDEBUG)
         # section wakeup
         if self.tvIsOff():
-            self.dialog.notification(serviceName, 'Turning on')
             self.braviarc.turn_on()
-            xbmc.sleep(2000);
+            xbmc.sleep(2000)
         # section wakeup
 
         self.setTvToKodiSource()
