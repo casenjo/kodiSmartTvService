@@ -14,7 +14,7 @@ serviceNickname = u'Kodi TV Service'
 
 # Extend the xbmc.Monitor class to do our bidding
 class TvMonitor(xbmc.Monitor):
-    TIME_TO_TV_SLEEP = 5  # (60 * 5)
+    TIME_TO_TV_SLEEP = (60 * 5)  # 5 minutes
 
     def __init__(self):
         xbmc.log(serviceName + " (TV Monitor): Starting", level=xbmc.LOGDEBUG)
@@ -122,11 +122,13 @@ class TvMonitor(xbmc.Monitor):
             xbmc.sleep(2000);
         # section wakeup
 
-        # section setToKodiSource
+        self.setTvToKodiSource()
+
+    
+    def setTvToKodiSource(self):
         playing_content = self.braviarc.get_playing_info()
         if playing_content.get('title') != self.tvInput:
             self.braviarc.select_source(self.tvInput)
-        # section setToKodiSource
 
     def tvIsOff(self):
         return self.braviarc.get_power_status() == u'standby'
