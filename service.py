@@ -111,17 +111,20 @@ class TvMonitor(xbmc.Monitor):
         return True
 
     def onScreensaverDeactivated(self):
-        xbmc.log(serviceName + " (TV Monitor): screensaver deactivated", level=xbmc.LOGDEBUG)
-        # section wakeup
-        if self.tvIsOff():
-            self.braviarc.turn_on()
-            xbmc.sleep(2000)
-        # section wakeup
-
+        xbmc.log(serviceName + " (TV Monitor): Screensaver deactivated", level=xbmc.LOGDEBUG)
+        self.wakeupTv()
         self.setTvToKodiInput()
 
+    # Wake up our TV
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
+    def wakeUpTv(self):
+        xbmc.log(serviceName + " (TV Monitor): Waking TV up", level=xbmc.LOGDEBUG)
+        if self.tvIsOff():
+            self.braviarc.turn_on()
+            xbmc.sleep(2000)  # Let the TV turn on before ending the method's execution
+
     # Change our TV to the input source in our config
-    # TODO: This is too specific to Bravia TVs, should be moved to a Bravia specific class
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def setTvToKodiInput(self):
         if self.getTvInput() != self.tvInput:
             xbmc.log(serviceName + " (TV Monitor): Setting TV to Kodi input", level=xbmc.LOGDEBUG)
