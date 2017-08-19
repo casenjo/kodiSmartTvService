@@ -22,7 +22,6 @@ class TvMonitor(xbmc.Monitor):
         self.addon = xbmcaddon.Addon(serviceId)
         self.dialog = xbmcgui.Dialog()
 
-
         self.isRunning = True
         self.isConnected = False
         self.timeScreensaverActivated = 0
@@ -114,11 +113,19 @@ class TvMonitor(xbmc.Monitor):
 
     def checkIfTimeToSleep(self):
         if self.tvIsOn() and xbmc.getCondVisibility("System.ScreenSaverActive"):
-            xbmc.log(serviceName + " (TV Monitor): Going to sleep", level=xbmc.LOGDEBUG)
+            xbmc.log(serviceName + " (TV Monitor): Checking if going to sleep", level=xbmc.LOGDEBUG)
             currentTime = time.time()
             playing_content = self.braviarc.get_playing_info()
             if playing_content.get('title') == u'HDMI 1' and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
+                xbmc.log(serviceName + " (TV Monitor): Input is HDMI1 and its past our bedtime, going to sleep", level=xbmc.LOGDEBUG)
                 self.braviarc.turn_off()
+
+            # Reset the screensaver activated time because we're using another input and if
+            # we switch inputs manually afterwards, the TV will turn off almost instantly lol
+            if playing_content.get('title') != u'HDMI 1':
+                xbmc.log(serviceName + " (TV Monitor): Input is not HDMI1, resetting timer", level=xbmc.LOGDEBUG)
+                self.timeScreensaverActivated = time.time()
+
 
 # Service entry point
 if __name__ == '__main__':
