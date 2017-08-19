@@ -123,11 +123,17 @@ class TvMonitor(xbmc.Monitor):
 
         self.setTvToKodiSource()
 
-    
+    # Change our TV to the input source in our config
+    # TODO: This is specific to Bravia TVs, should be moved to a Bravia specific class
     def setTvToKodiSource(self):
-        playing_content = self.braviarc.get_playing_info()
-        if playing_content.get('title') != self.tvInput:
+        if self.getTvSource() != self.tvInput:
             self.braviarc.select_source(self.tvInput)
+
+    # Get our TV's input source
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
+    def getTvSource(self):
+        playing_content = self.braviarc.get_playing_info()
+        return playing_content.get('title')
 
     def tvIsOff(self):
         return self.braviarc.get_power_status() == u'standby'
