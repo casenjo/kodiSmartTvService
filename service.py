@@ -2,8 +2,6 @@ import os
 import sys
 import time
 import xbmc
-import xbmcgui
-import xbmcaddon
 from lib import braviarc, utils
 
 serviceClientId = u'kodismarttvservice'
