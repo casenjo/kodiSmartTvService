@@ -149,15 +149,19 @@ class TvMonitor(xbmc.Monitor):
     def resetScreensaverActivationTime(self):
         self.timeScreensaverActivated = int(time.time())
 
+    def isTvSetToKodiInput(self):
+        return self.getTvInput() == self.tvInput
+
     def checkIfTimeToSleep(self):
+
+        if
         if self.tvIsOff():
             self.resetScreensaverActivationTime()
-        if self.tvIsOn() and xbmc.getCondVisibility("System.ScreenSaverActive"):
+        if xbmc.getCondVisibility("System.ScreenSaverActive") and self.tvIsOn():
             xbmc.log(serviceName + " (TV Monitor): Checking if going to sleep", level=xbmc.LOGDEBUG)
             currentTime = int(time.time())
-            playing_content = self.braviarc.get_playing_info()
 
-            if playing_content.get('title') == self.tvInput and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
+            if self.isTvSetToKodiInput() and ((currentTime - self.timeScreensaverActivated) > self.TIME_TO_TV_SLEEP):
                 xbmc.log(serviceName + " (TV Monitor): Input is " + self.tvInput + " and its past our bedtime, going to sleep", level=xbmc.LOGDEBUG)
                 self.braviarc.turn_off()
 
@@ -173,6 +177,9 @@ if __name__ == '__main__':
     xbmc.log(serviceName + ": Starting", level=xbmc.LOGDEBUG)
 
     tvMonitor = TvMonitor()
+
+    # Toggle screensaver for faster debugging
+    xbmc.executebuiltin('ActivateScreensaver')
 
     while not tvMonitor.abortRequested() and tvMonitor.isRunning:
         # Sleep/wait for abort for 2 seconds
