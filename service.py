@@ -174,9 +174,6 @@ if __name__ == '__main__':
 
     tvMonitor = TvMonitor()
 
-    # Toggle screensaver for faster debugging
-    xbmc.executebuiltin('ActivateScreensaver')
-
     while not tvMonitor.abortRequested() and tvMonitor.isRunning:
         # Sleep/wait for abort for 2 seconds
         if tvMonitor.waitForAbort(2):
