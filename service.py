@@ -7,10 +7,10 @@ import xbmcaddon
 import requests
 from lib import braviarc
 
-serviceName = u"Kodi TV Wakeup"
+serviceName = u"Kodi Smart TV Service"
 serviceId = u"service.tv.wakeup"
-serviceClientId = u'koditvwakeup'
-serviceNickname = u'Kodi TV Wakeup'
+serviceClientId = u'kodismarttvservice'
+serviceNickname = u'Kodi Smart TV Service'
 
 # Extend the xbmc.Monitor class to do our bidding
 class TvMonitor(xbmc.Monitor):
