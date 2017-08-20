@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="31000">
-        <setting label="31100" type="ipaddress" id="tvIpAddress"    default="" />
-        <setting label="31200" type="text"      id="tvMacAddress"   default="" />
-        <setting label="31300" type="select"    id="tvInput"        lvalues="31301|31302|31303|31304" />
-        <setting label="31400" type="number"    id="timeUntilSleep" default="5" />
-        <setting label="31500" type="text"      id="tvPin"          default="0000" />
+        <setting label="31010" type="ipaddress" id="tvIpAddress"    default="" />
+        <setting label="31020" type="text"      id="tvMacAddress"   default="" />
+        <setting label="31030" type="select"    id="tvInput"        lvalues="31031|31032|31033|31034" />
+        <setting label="31040" type="number"    id="timeUntilSleep" default="5" />
+        <setting label="31050" type="text"      id="tvPin"          default="0000" />
     </category>
 </settings>

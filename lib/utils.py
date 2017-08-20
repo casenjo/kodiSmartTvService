@@ -29,3 +29,6 @@ def numberDialog(prompt):
 
 def yesNoDialog(line1, line2='', line3=''):
     return xbmcgui.Dialog().yesno(getAddOnName(), line1, line2, line3)
+
+def getString(stringId):
+    return __addOn.getLocalizedString(stringId)

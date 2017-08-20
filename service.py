@@ -53,9 +53,7 @@ class TvMonitor(xbmc.Monitor):
     # Configure TV connection
     def configureTvConnection(self):
         utils.log("Default PIN detected, starting configuration flow")
-        userWantsToConnect = utils.yesNoDialog('Plugin not connected to the TV. Do you want to connect to it?',
-                                               'If yes, be aware that the dialog on the TV might be large and will not let you see the interface to input the PIN.',
-                                               'You can use your keyboard to type the code and then press Enter :)')
+        userWantsToConnect = utils.yesNoDialog(utils.getString(32000), utils.getString(32001), utils.getString(32002))
 
         if not userWantsToConnect:
             utils.log("User denied prompt, exiting")

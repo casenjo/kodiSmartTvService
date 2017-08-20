@@ -20,38 +20,50 @@ msgctxt "#31000"
 msgid "TV Settings"
 msgstr "TV Settings"
 
-msgctxt "#31100"
+msgctxt "#31010"
 msgid "TV IP Address"
 msgstr "TV IP Address"
 
-msgctxt "#31200"
+msgctxt "#31020"
 msgid "TV Mac Address"
 msgstr "TV Mac Address"
 
-msgctxt "#31300"
+msgctxt "#31030"
 msgid "TV Input"
 msgstr "TV Input"
 
-msgctxt "#31301"
+msgctxt "#31031"
 msgid "HDMI 1"
 msgstr "HDMI 1"
 
-msgctxt "#31302"
+msgctxt "#31032"
 msgid "HDMI 2"
 msgstr "HDMI 2"
 
-msgctxt "#31303"
+msgctxt "#31033"
 msgid "HDMI 3"
 msgstr "HDMI 3"
 
-msgctxt "#31304"
+msgctxt "#31034"
 msgid "HDMI 4"
 msgstr "HDMI 4"
 
-msgctxt "#31400"
+msgctxt "#31040"
 msgid "Time to wait until TV will sleep"
 msgstr "Time to wait until TV will sleep"
 
-msgctxt "#31500"
+msgctxt "#31050"
 msgid "TV PIN"
 msgstr "TV PIN"
+
+msgctxt "#32000"
+msgid "Plugin not connected to the TV. Do you want to connect to it?"
+msgstr "Plugin not connected to the TV. Do you want to connect to it?"
+
+msgctxt "#32001"
+msgid "If yes, be aware that the dialog on the TV might be large and will not let you see the interface to input the PIN."
+msgstr "If yes, be aware that the dialog on the TV might be large and will not let you see the interface to input the PIN."
+
+msgctxt "#32002"
+msgid "You can use your keyboard to type the code and then press Enter :)"
+msgstr "You can use your keyboard to type the code and then press Enter :)"
