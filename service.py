@@ -65,9 +65,10 @@ class TvMonitor(xbmc.Monitor):
         utils.log("Requesting PIN from TV")
         self.connectToTv(self.tvPin)
 
-        pinFromTv = utils.numberDialog(utils.getString(32003))
+        pinFromTv = self.getPinFromUserPrompt()
+        if pinFromTv is False:
+            return
 
-        # NOTHING MIGHT BE ENTERED. CHECK IF ITS BLANK AND/OR NOT ONLY NUMBERS AND EXIT IF THAT'S THE CASE
         utils.log("PIN " + pinFromTv + " entered")
 
         self.connectToTv(pinFromTv)
@@ -87,6 +88,26 @@ class TvMonitor(xbmc.Monitor):
     # Check configured PIN isn't the default
     def pinIsDefault(self):
         return self.tvPin == "0000"
+
+    # Get a pin from the user when setting up the TV
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
+    def getPinFromUserPrompt(self):
+        pinFromTv = ''
+
+        while not self.validatePin(pinFromTv):
+            pinFromTv = utils.numberDialog(utils.getString(32003))
+            if not self.validatePin(pinFromTv):
+                userWantsToTryAgain = utils.yesNoDialog('PIN incorrect, it needs to be exactly 4 digits.', 'Try again?')
+                if not userWantsToTryAgain:
+                    break
+
+        if pinFromTv == '':
+            return False
+        else:
+            return pinFromTv
+
+    def validatePin(self, pinFromTv=''):
+        return pinFromTv != '' and pinFromTv.isdigit() and len(pinFromTv) == 4
 
     # Check configuration to make sure we can make an initial connection to the TV
     def configIsValid(self):
