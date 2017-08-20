@@ -11,6 +11,6 @@
   <extension point="xbmc.addon.metadata">
     <source>https://github.com/casenjo/kodiSmartTvService</source>
     <platform>all</platform>
-    <summary lang="en">Wake up TV when waking up Kodi</summary>
+    <summary lang="en">Wake up smart TVs when Kodi is woken up, or have the TV sleep after a certain period of inactivity.</summary>
   </extension>
 </addon>
