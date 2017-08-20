@@ -30,7 +30,7 @@ class TvMonitor(xbmc.Monitor):
         if self.pinIsDefault():
             self.configureTvConnection()
         else:
-            self.connectToTv(self.tvPin)
+            self.isConnected = self.connectToTv(self.tvPin)
 
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def getTvInputSetting(self):
