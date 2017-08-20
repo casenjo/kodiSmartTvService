@@ -32,6 +32,7 @@ class TvMonitor(xbmc.Monitor):
         else:
             self.connectToTv(self.tvPin)
 
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def getTvInputSetting(self):
         input = utils.getSetting('tvInput')
         # 0 => HDMI 1, 1 => HDMI 2, etc
