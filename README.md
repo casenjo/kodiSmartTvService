@@ -24,8 +24,8 @@ Also, make sure that the `script.module.requests` addon is installed.
 Not a simple installation (yet!), it will be published into the official
 Kodi repo soon :)
 
-Usage
-=====
+Setup
+=============
 Go to
 Kodi > Add-ons > My Add-ons > Services > Kodi Smart TV Service > Configure
 
