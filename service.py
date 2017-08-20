@@ -64,14 +64,14 @@ class TvMonitor(xbmc.Monitor):
         utils.log("Requesting PIN from TV")
         self.connectToTv(self.tvPin)
 
-        pinFromTv = utils.numberDialog('Enter PIN from TV')
+        pinFromTv = utils.numberDialog(utils.getString(32003))
         utils.log("PIN " + pinFromTv + " entered")
 
         self.connectToTv(pinFromTv)
 
         if not self.braviarc.is_connected():
             utils.log("PIN incorrect, exiting")
-            utils.notificationError('PIN incorrect, unable to connect')
+            utils.notificationError(utils.getString(32004))
             self.isRunning = False
             return
         else:
@@ -90,15 +90,15 @@ class TvMonitor(xbmc.Monitor):
         utils.log("Checking configuration")
         if self.tvIp == '':
             utils.log("Configuration failed, TV IP is missing")
-            utils.notificationError('TV IP address not configured')
+            utils.notificationError(utils.getString(32005))
             return False
         if self.tvMacAddress == '':
             utils.log("Configuration failed, TV MAC is missing")
-            utils.notificationError('TV MAC address not configured')
+            utils.notificationError(utils.getString(32006))
             return False
         if self.tvInput == '':
             utils.log("Configuration failed, TV Input must be selected")
-            utils.notificationError('TV Input must be selected')
+            utils.notificationError(utils.getString(32007))
             return False
         utils.log("Configuration validated")
         return True

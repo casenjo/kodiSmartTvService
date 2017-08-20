@@ -67,3 +67,23 @@ msgstr "If yes, be aware that the dialog on the TV might be large and will not l
 msgctxt "#32002"
 msgid "You can use your keyboard to type the code and then press Enter :)"
 msgstr "You can use your keyboard to type the code and then press Enter :)"
+
+msgctxt "#32003"
+msgid "Enter PIN from TV"
+msgstr "Enter PIN from TV"
+
+msgctxt "#32004"
+msgid "PIN incorrect, unable to connect"
+msgstr "PIN incorrect, unable to connect"
+
+msgctxt "#32005"
+msgid "TV IP address not configured"
+msgstr "TV IP address not configured"
+
+msgctxt "#32006"
+msgid "TV MAC address not configured"
+msgstr "TV MAC address not configured"
+
+msgctxt "#32007"
+msgid "TV Input must be selected"
+msgstr "TV Input must be selected"
