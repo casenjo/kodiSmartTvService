@@ -25,7 +25,7 @@ def notificationError(message):
     notification(message, xbmcgui.NOTIFICATION_ERROR)
 
 def numberDialog(prompt):
-    xbmcgui.Dialog().numeric(0, prompt)
+    return xbmcgui.Dialog().numeric(0, prompt)
 
 def yesNoDialog(line1, line2='', line3=''):
     return xbmcgui.Dialog().yesno(getAddOnName(), line1, line2, line3)
