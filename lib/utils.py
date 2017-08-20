@@ -6,7 +6,7 @@ __addOnId = u'service.smarttvservice'
 __addOn = xbmcaddon.Addon(__addOnId)
 
 
-def log(message, loglevel=xbmc.LOGNOTICE):
+def log(message, loglevel=xbmc.LOGDEBUG):
     xbmc.log(__addOnId + ": " + message, level=loglevel)
 
 def getAddOnName():
