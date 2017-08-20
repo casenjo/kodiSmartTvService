@@ -49,7 +49,9 @@ class TvMonitor(xbmc.Monitor):
         :rtype: boolean
         """
         utils.log("Connecting to TV")
-        # CHECK IF PIN IS NONE OR NOT ALL NUMBERS AND RETURN FALSE BEFORE RUNNING THE NEXT INSTRUCTION
+        if not self.validatePin(pin):
+            return False
+
         return self.braviarc.connect(pin, serviceClientId, utils.getAddOnName())
 
     # Configure TV connection
