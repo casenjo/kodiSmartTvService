@@ -19,7 +19,7 @@ class TvMonitor(xbmc.Monitor):
         self.tvMacAddress = utils.getSetting('tvMacAddress')
         self.tvPin = utils.getSetting('tvPin')
         self.tvInput = self.getTvInputSetting()
-        self.TIME_TO_TV_SLEEP = (1 * int(utils.getSetting('timeUntilSleep')))  # Default setting is 5 minutes
+        self.TIME_TO_TV_SLEEP = (60 * int(utils.getSetting('timeUntilSleep')))  # Default setting is 5 minutes
 
         if not self.configIsValid():
             self.isRunning = False
@@ -30,7 +30,7 @@ class TvMonitor(xbmc.Monitor):
         if self.pinIsDefault():
             self.configureTvConnection()
         else:
-            self.connectToTv()
+            self.connectToTv(self.tvPin)
 
     def getTvInputSetting(self):
         input = utils.getSetting('tvInput')
@@ -42,9 +42,9 @@ class TvMonitor(xbmc.Monitor):
             '3': 'HDMI 4'
         }.get(input, '')  # '' is default if input not found
 
-    def connectToTv(self):
+    def connectToTv(self, pin):
         utils.log("Connecting to TV")
-        return self.braviarc.connect(self.tvPin, serviceClientId, utils.getAddOnName())
+        return self.braviarc.connect(pin, serviceClientId, utils.getAddOnName())
 
     # Configure TV connection
     def configureTvConnection(self):
@@ -75,7 +75,7 @@ class TvMonitor(xbmc.Monitor):
             utils.setSetting('tvPin', pinFromTv)
             self.tvPin = utils.getSetting('tvPin')
             utils.log("New PIN is " + self.tvPin)
-            self.isConnected = self.connectToTv()
+            self.isConnected = self.connectToTv(self.tvPin)
 
     # Check configured PIN isn't the default
     def pinIsDefault(self):
