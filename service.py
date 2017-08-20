@@ -43,6 +43,10 @@ class TvMonitor(xbmc.Monitor):
         }.get(input, '')  # '' is default if input not found
 
     def connectToTv(self, pin):
+        """
+
+        :rtype: boolean
+        """
         utils.log("Connecting to TV")
         return self.braviarc.connect(pin, serviceClientId, utils.getAddOnName())
 
@@ -59,11 +63,12 @@ class TvMonitor(xbmc.Monitor):
             return
 
         utils.log("Requesting PIN from TV")
-        self.braviarc.connect(self.tvPin, serviceClientId, utils.getAddOnName())
+        self.connectToTv(self.tvPin)
+
         pinFromTv = utils.numberDialog('Enter PIN from TV')
         utils.log("PIN " + pinFromTv + " entered")
 
-        self.braviarc.connect(pinFromTv, serviceClientId, utils.getAddOnName())
+        self.connectToTv(pinFromTv)
 
         if not self.braviarc.is_connected():
             utils.log("PIN incorrect, exiting")
