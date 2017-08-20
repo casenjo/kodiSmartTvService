@@ -35,12 +35,13 @@ class TvMonitor(xbmc.Monitor):
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def getTvInputSetting(self):
         input = utils.getSetting('tvInput')
-        # 0 => HDMI 1, 1 => HDMI 2, etc
+        # 0 => '', 1 => HDMI 1, etc
         return {
-            '0': 'HDMI 1',
-            '1': 'HDMI 2',
-            '2': 'HDMI 3',
-            '3': 'HDMI 4'
+            '0': '',
+            '1': 'HDMI 1',
+            '2': 'HDMI 2',
+            '3': 'HDMI 3',
+            '4': 'HDMI 4'
         }.get(input, '')  # '' is default if input not found
 
     def connectToTv(self, pin):
@@ -57,7 +58,7 @@ class TvMonitor(xbmc.Monitor):
     # Configure TV connection
     def configureTvConnection(self):
         utils.log("Default PIN detected, starting configuration flow")
-        userWantsToConnect = utils.yesNoDialog(utils.getString(32000), utils.getString(32001), utils.getString(32002))
+        userWantsToConnect = utils.yesNoDialog(utils.getString(30011), utils.getString(30012), utils.getString(30013))
 
         if not userWantsToConnect:
             utils.log("User denied prompt, exiting")
@@ -77,7 +78,7 @@ class TvMonitor(xbmc.Monitor):
 
         if not self.braviarc.is_connected():
             utils.log("PIN incorrect, exiting")
-            utils.notificationError(utils.getString(32004))
+            utils.notificationError(utils.getString(30015))
             self.isRunning = False
             return
         else:
@@ -97,7 +98,7 @@ class TvMonitor(xbmc.Monitor):
         pinFromTv = ''
 
         while not self.validatePin(pinFromTv):
-            pinFromTv = utils.numberDialog(utils.getString(32003))
+            pinFromTv = utils.numberDialog(utils.getString(30014))
             if not self.validatePin(pinFromTv):
                 userWantsToTryAgain = utils.yesNoDialog('PIN incorrect, it needs to be exactly 4 digits.', 'Try again?')
                 if not userWantsToTryAgain:
@@ -116,15 +117,15 @@ class TvMonitor(xbmc.Monitor):
         utils.log("Checking configuration")
         if self.tvIp == '':
             utils.log("Configuration failed, TV IP is missing")
-            utils.notificationError(utils.getString(32005))
+            utils.notificationError(utils.getString(30016))
             return False
         if self.tvMacAddress == '':
             utils.log("Configuration failed, TV MAC is missing")
-            utils.notificationError(utils.getString(32006))
+            utils.notificationError(utils.getString(30017))
             return False
         if self.tvInput == '':
             utils.log("Configuration failed, TV Input must be selected")
-            utils.notificationError(utils.getString(32007))
+            utils.notificationError(utils.getString(30018))
             return False
         utils.log("Configuration validated")
         return True
