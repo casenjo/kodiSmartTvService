@@ -49,6 +49,7 @@ class TvMonitor(xbmc.Monitor):
         :rtype: boolean
         """
         utils.log("Connecting to TV")
+        # CHECK IF PIN IS NONE OR NOT ALL NUMBERS AND RETURN FALSE BEFORE RUNNING THE NEXT INSTRUCTION
         return self.braviarc.connect(pin, serviceClientId, utils.getAddOnName())
 
     # Configure TV connection
@@ -65,6 +66,8 @@ class TvMonitor(xbmc.Monitor):
         self.connectToTv(self.tvPin)
 
         pinFromTv = utils.numberDialog(utils.getString(32003))
+
+        # NOTHING MIGHT BE ENTERED. CHECK IF ITS BLANK AND/OR NOT ONLY NUMBERS AND EXIT IF THAT'S THE CASE
         utils.log("PIN " + pinFromTv + " entered")
 
         self.connectToTv(pinFromTv)
@@ -157,8 +160,7 @@ class TvMonitor(xbmc.Monitor):
 
             if self.isTvSetToKodiInput() and self.isTimeToSleep():
                 utils.log("Input is " + self.tvInput + " and its past our bedtime, going to sleep")
-                utils.log("TURNING TV OFF NOW")
-                # self.braviarc.turn_off()
+                self.braviarc.turn_off()
 
             # Reset the screensaver activated time because we're using another input and if
             # we switch inputs manually afterwards, the TV will turn off almost instantly lol
