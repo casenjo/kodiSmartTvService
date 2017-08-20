@@ -19,6 +19,8 @@ Installation
 Install the files into a folder called `service.kodismarttvservice`
 inside your Kodi installation's `addons` folder.
 
+Also, make sure that the `script.module.requests` addon is installed.
+
 Not a simple installation (yet!), it will be published into the official
 Kodi repo soon :)
 
