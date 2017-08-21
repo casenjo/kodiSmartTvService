@@ -1,5 +1,5 @@
 import utils
-
+import braviarc
 
 class TvConnectionManager():
 
@@ -16,6 +16,9 @@ class TvConnectionManager():
         if not self.validateConfig():
             self.isRunning = False
             return
+
+        # TODO: This needs to be handled by a factory in order to use a generic TV instead of a specific one
+        # self.braviarc = braviarc.BraviaRC(self.tvIp, self.tvMacAddress)
 
         self.isRunning = False
         return
