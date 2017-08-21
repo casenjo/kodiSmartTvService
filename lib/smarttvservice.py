@@ -6,8 +6,8 @@ class SmartTvService:
 
     def __init__(self):
         utils.log("Smart TV Service starting")
-        self.monitor = xbmc.Monitor()
         self.tvConnectionManager = TvConnectionManager()
+        self.monitor = xbmc.Monitor(self.tvConnectionManager)
 
     def run(self):
         utils.log("Smart TV Service running")
@@ -18,5 +18,9 @@ class SmartTvService:
                 # Abort was requested while waiting. We should exit
                 utils.log("Kodi abort detected, stopping service execution")
                 break
-            # tvConnectionManager.tick()
+            self.tick()
 
+    def tick(self):
+        #         if tvConnectionManager.isConnected:
+        #             tvMonitor.checkIfTimeToSleep()
+        utils.log("Tick")
