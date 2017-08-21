@@ -1,7 +1,7 @@
 import utils
 from tvconnectionmanager import TvConnectionManager
 from kodimonitor import KodiMonitor
-import xbmc
+
 
 class SmartTvService:
 
