@@ -147,3 +147,5 @@ class TvConnectionManager():
     def tvIsOn(self):
         return self.braviarc.get_power_status() == u'active'
 
+    def isTvSetToKodiInput(self):
+        return self.getTvInput() == self.tvInput
