@@ -22,6 +22,8 @@ class TvConnectionManager():
 
         if self.pinIsDefault():
             self.configureTvConnection()
+        else:
+            self.isConnected = self.connectToTv(self.tvPin)
 
         # debug only
         self.isRunning = False
@@ -60,9 +62,30 @@ class TvConnectionManager():
             utils.log("User denied prompt, exiting")
             self.isRunning = False
             return
-        return  #debug
+
         utils.log("Requesting PIN from TV")
         self.connectToTv(self.tvPin)
+
+        pinFromTv = self.getPinFromUserPrompt()
+        if pinFromTv is False:
+            return
+
+        utils.log("PIN " + pinFromTv + " entered")
+
+        self.connectToTv(pinFromTv)
+
+        if not self.braviarc.is_connected():
+            utils.log("PIN incorrect, exiting")
+            utils.notificationError(utils.getString(30015))
+            self.isRunning = False
+            return
+        else:
+            utils.log("PIN correct, saving to plugin settings")
+            utils.setSetting('tvPin', pinFromTv)
+            self.tvPin = utils.getSetting('tvPin')
+            utils.log("New PIN is " + self.tvPin)
+            self.isConnected = self.connectToTv(self.tvPin)
+
     # TODO: Clean up code inside to be independent of Bravia-specific functions and use a generic TV object
     def connectToTv(self, pin):
         """
@@ -78,3 +101,20 @@ class TvConnectionManager():
     # TODO: This should be inside a Bravia-specific TV class
     def validatePin(self, pinFromTv=''):
         return pinFromTv != '' and pinFromTv.isdigit() and len(pinFromTv) == 4
+
+    # Get a pin from the user when setting up the TV
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
+    def getPinFromUserPrompt(self):
+        pinFromTv = ''
+
+        while not self.validatePin(pinFromTv):
+            pinFromTv = utils.numberDialog(utils.getString(30014))
+            if not self.validatePin(pinFromTv):
+                userWantsToTryAgain = utils.yesNoDialog('PIN incorrect, it needs to be exactly 4 digits.', 'Try again?')
+                if not userWantsToTryAgain:
+                    break
+
+        if pinFromTv == '':
+            return False
+        else:
+            return pinFromTv
