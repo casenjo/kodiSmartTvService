@@ -20,8 +20,13 @@ class TvConnectionManager():
         # TODO: This needs to be handled by a factory in order to use a generic TV instead of a specific one
         # self.braviarc = braviarc.BraviaRC(self.tvIp, self.tvMacAddress)
 
+        if self.pinIsDefault():
+            # self.configureTvConnection()
+
+        # debug only
         self.isRunning = False
         return
+        # debug only
 
     # Check configuration to make sure we can make an initial connection to the TV
     def validateConfig(self):
@@ -40,3 +45,8 @@ class TvConnectionManager():
             return False
         utils.log("Configuration validated")
         return True
+
+    # Check configured PIN isn't the default
+    def pinIsDefault(self):
+        return self.tvPin == "0000"
+
