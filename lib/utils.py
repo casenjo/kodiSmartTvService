@@ -3,6 +3,7 @@ import xbmcaddon
 import xbmcgui
 
 __addOnId = u'service.smarttvservice'
+addOnTvClientId = u'kodismarttvservice'
 __addOn = xbmcaddon.Addon(__addOnId)
 
 

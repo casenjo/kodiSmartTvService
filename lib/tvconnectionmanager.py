@@ -21,7 +21,7 @@ class TvConnectionManager():
         # self.braviarc = braviarc.BraviaRC(self.tvIp, self.tvMacAddress)
 
         if self.pinIsDefault():
-            # self.configureTvConnection()
+            self.configureTvConnection()
 
         # debug only
         self.isRunning = False
@@ -50,3 +50,31 @@ class TvConnectionManager():
     def pinIsDefault(self):
         return self.tvPin == "0000"
 
+    # Configure TV connection
+    # TODO: Clean up code inside to be independent of Bravia-specific functions
+    def configureTvConnection(self):
+        utils.log("Default PIN detected, starting configuration flow")
+        userWantsToConnect = utils.yesNoDialog(utils.getString(30011), utils.getString(30012), utils.getString(30013))
+
+        if not userWantsToConnect:
+            utils.log("User denied prompt, exiting")
+            self.isRunning = False
+            return
+        return  #debug
+        utils.log("Requesting PIN from TV")
+        self.connectToTv(self.tvPin)
+    # TODO: Clean up code inside to be independent of Bravia-specific functions and use a generic TV object
+    def connectToTv(self, pin):
+        """
+
+        :rtype: boolean
+        """
+        utils.log("Connecting to TV")
+        if not self.validatePin(pin):
+            return False
+
+        return self.braviarc.connect(pin, utils.addOnTvClientId, utils.getAddOnName())
+
+    # TODO: This should be inside a Bravia-specific TV class
+    def validatePin(self, pinFromTv=''):
+        return pinFromTv != '' and pinFromTv.isdigit() and len(pinFromTv) == 4
