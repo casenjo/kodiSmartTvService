@@ -13,7 +13,7 @@ class TvConnectionManager():
         self.tvPin = utils.getSetting('tvPin')
         self.tvInput = utils.getTvInputSetting('tvInput')
 
-        if not self.configIsValid():
+        if not self.validateConfig():
             self.isRunning = False
             return
 
@@ -21,18 +21,18 @@ class TvConnectionManager():
         return
 
     # Check configuration to make sure we can make an initial connection to the TV
-    def configIsValid(self):
+    def validateConfig(self):
         utils.log("Checking configuration")
         if self.tvIp == '':
-            utils.log("Configuration failed, TV IP is missing")
+            utils.log("Configuration invalid, TV IP is missing")
             utils.notificationError(utils.getString(30016))
             return False
         if self.tvMacAddress == '':
-            utils.log("Configuration failed, TV MAC is missing")
+            utils.log("Configuration invalid, TV MAC is missing")
             utils.notificationError(utils.getString(30017))
             return False
         if self.tvInput == '':
-            utils.log("Configuration failed, TV Input must be selected")
+            utils.log("Configuration invalid, TV Input must be selected")
             utils.notificationError(utils.getString(30018))
             return False
         utils.log("Configuration validated")
