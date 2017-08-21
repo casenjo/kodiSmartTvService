@@ -149,3 +149,6 @@ class TvConnectionManager():
 
     def isTvSetToKodiInput(self):
         return self.getTvInput() == self.tvInput
+
+    def turnOff(self):
+        return self.braviarc.turn_off()
