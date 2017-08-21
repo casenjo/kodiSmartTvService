@@ -1,7 +1,8 @@
 import utils
 import braviarc
 
-class TvConnectionManager():
+
+class TvConnectionManager:
 
     def __init__(self):
         utils.log("TvConnectionManager starting")
