@@ -126,6 +126,13 @@ class TvConnectionManager():
         if self.tvIsOff():
             self.braviarc.turn_on()
 
+    # Change our TV to the input source in our config
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
+    def setTvToKodiInput(self):
+        if self.getTvInput() != self.tvInput:
+            utils.log("Setting TV to Kodi input")
+            self.braviarc.select_source(self.tvInput)
+
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def tvIsOff(self):
         return self.braviarc.get_power_status() == u'standby'
