@@ -126,3 +126,11 @@ class TvConnectionManager():
         if self.tvIsOff():
             self.braviarc.turn_on()
 
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
+    def tvIsOff(self):
+        return self.braviarc.get_power_status() == u'standby'
+
+    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
+    def tvIsOn(self):
+        return self.braviarc.get_power_status() == u'active'
+
