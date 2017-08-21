@@ -1,5 +1,6 @@
 import utils
 from tvconnectionmanager import TvConnectionManager
+from kodimonitor import KodiMonitor
 import xbmc
 
 class SmartTvService:
@@ -7,7 +8,7 @@ class SmartTvService:
     def __init__(self):
         utils.log("Smart TV Service starting")
         self.tvConnectionManager = TvConnectionManager()
-        self.monitor = xbmc.Monitor(self.tvConnectionManager)
+        self.monitor = KodiMonitor(self.tvConnectionManager)
 
     def run(self):
         utils.log("Smart TV Service running")
@@ -21,6 +22,6 @@ class SmartTvService:
             self.tick()
 
     def tick(self):
-        #         if tvConnectionManager.isConnected:
-        #             tvMonitor.checkIfTimeToSleep()
-        utils.log("Tick")
+        if self.tvConnectionManager.isConnected:
+            self.monitor.checkIfTimeToSleep()
+
