@@ -1,5 +1,5 @@
 import utils
-import braviarc
+from braviarc import BraviaRC
 
 
 class TvConnectionManager:
@@ -19,7 +19,7 @@ class TvConnectionManager:
             return
 
         # TODO: This needs to be handled by a factory in order to use a generic TV instead of a specific one
-        self.braviarc = braviarc.BraviaRC(self.tvIp, self.tvMacAddress)
+        self.tv = BraviaRC(self.tvIp, self.tvMacAddress)
 
         if self.pinIsDefault():
             self.configureTvConnection()
@@ -70,7 +70,7 @@ class TvConnectionManager:
 
         self.connectToTv(pinFromTv)
 
-        if not self.braviarc.is_connected():
+        if not self.tv.is_connected():
             utils.log("PIN incorrect, exiting")
             utils.notificationError(utils.getString(30015))
             self.isRunning = False
@@ -92,7 +92,7 @@ class TvConnectionManager:
         if not self.validatePin(pin):
             return False
 
-        return self.braviarc.connect(pin, utils.addOnTvClientId, utils.getAddOnName())
+        return self.tv.connect(pin, utils.addOnTvClientId, utils.getAddOnName())
 
     # TODO: This should be inside a Bravia-specific TV class
     def validatePin(self, pinFromTv=''):
@@ -120,31 +120,31 @@ class TvConnectionManager:
     def wakeUpTv(self):
         utils.log("Waking TV up")
         if self.tvIsOff():
-            self.braviarc.turn_on()
+            self.tv.turn_on()
 
     # Change our TV to the input source in our config
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def setTvToKodiInput(self):
         if self.getTvInput() != self.tvInput:
             utils.log("Setting TV to Kodi input")
-            self.braviarc.select_source(self.tvInput)
+            self.tv.select_source(self.tvInput)
 
     # Get our TV's input source
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def getTvInput(self):
-        playing_content = self.braviarc.get_playing_info()
+        playing_content = self.tv.get_playing_info()
         return playing_content.get('title')
 
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def tvIsOff(self):
-        return self.braviarc.get_power_status() == u'standby'
+        return self.tv.get_power_status() == u'standby'
 
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def tvIsOn(self):
-        return self.braviarc.get_power_status() == u'active'
+        return self.tv.get_power_status() == u'active'
 
     def isTvSetToKodiInput(self):
         return self.getTvInput() == self.tvInput
 
     def turnOff(self):
-        return self.braviarc.turn_off()
+        return self.tv.turn_off()
