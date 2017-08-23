@@ -10,7 +10,7 @@ class SmartTvService:
         # self.tvConnectionManager = TvConnectionManager()
         # self.monitor = KodiMonitor(self.tvConnectionManager)
 
-        tv = TvFactory().getTv()
+        tv = TvFactory().getTv("Sony")
         utils.log(tv.getName())
 
     def run(self):
@@ -30,7 +30,7 @@ class SmartTvService:
 
 
 
-class TvSony:
+class TvSony: # implements TV contract
 
     def getName(self):
         return "Sony TV here"
@@ -41,4 +41,4 @@ class TvFactory:
         self.availableTvs = dict(Sony=TvSony)
 
     def getTv(self, tv=None):
-        return self.availableTvs["Sony"]()
+        return self.availableTvs[tv]()
