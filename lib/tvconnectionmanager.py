@@ -140,4 +140,4 @@ class TvConnectionManager:
         return self.getTvInput() == self.tvInput
 
     def turnOff(self):
-        return self.tv.turn_off()
+        return self.tv.turnOff()

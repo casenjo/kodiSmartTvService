@@ -19,6 +19,9 @@ class TvSony: # implements TV contract
         if not tvInput == '':
             self.tv.select_source(tvInput)
 
+    def turnOff(self):
+        self.tv.turn_off()
+
     def isOff(self):
         return self.tv.get_power_status() == u'standby'
 
