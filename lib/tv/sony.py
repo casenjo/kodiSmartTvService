@@ -17,3 +17,6 @@ class TvSony: # implements TV contract
 
     def isOff(self):
         return self.tv.get_power_status() == u'standby'
+
+    def isOn(self):
+        return self.tv.get_power_status() == u'active'
