@@ -115,11 +115,10 @@ class TvConnectionManager:
             return pinFromTv
 
     # Wake up our TV
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def wakeUpTv(self):
         utils.log("Waking TV up")
         if self.tvIsOff():
-            self.tv.turn_on()
+            self.tv.turnOn()
 
     # Change our TV to the input source in our config
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
