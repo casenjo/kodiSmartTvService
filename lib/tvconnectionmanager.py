@@ -1,5 +1,4 @@
 import utils
-from braviarc import BraviaRC
 
 
 class TvConnectionManager:
