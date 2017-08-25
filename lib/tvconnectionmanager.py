@@ -121,11 +121,10 @@ class TvConnectionManager:
             self.tv.turnOn()
 
     # Change our TV to the input source in our config
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def setTvToKodiInput(self):
         if self.getTvInput() != self.tvInput:
             utils.log("Setting TV to Kodi input")
-            self.tv.select_source(self.tvInput)
+            self.tv.setInput(self.tvInput)
 
     # Get our TV's input source
     def getTvInput(self):
