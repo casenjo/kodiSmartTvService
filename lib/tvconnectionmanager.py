@@ -140,7 +140,7 @@ class TvConnectionManager:
 
     # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def tvIsOn(self):
-        return self.tv.get_power_status() == u'active'
+        return self.tv.isOn()
 
     def isTvSetToKodiInput(self):
         return self.getTvInput() == self.tvInput
