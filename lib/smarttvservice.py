@@ -1,4 +1,6 @@
 import utils
+from tv.tvfactory import TvFactory
+
 from tvconnectionmanager import TvConnectionManager
 from kodimonitor import KodiMonitor
 
@@ -27,18 +29,3 @@ class SmartTvService:
     def tick(self):
         if self.tvConnectionManager.isConnected:
             self.monitor.checkIfTimeToSleep()
-
-
-
-class TvSony: # implements TV contract
-
-    def getName(self):
-        return "Sony TV here"
-
-class TvFactory:
-
-    def __init__(self):
-        self.availableTvs = dict(Sony=TvSony)
-
-    def getTv(self, tv=None):
-        return self.availableTvs[tv]()
