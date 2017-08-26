@@ -1,6 +1,4 @@
 import utils
-from tv.tvfactory import TvFactory
-
 from tvconnectionmanager import TvConnectionManager
 from kodimonitor import KodiMonitor
 
@@ -9,22 +7,19 @@ class SmartTvService:
 
     def __init__(self):
         utils.log("Smart TV Service starting")
-        # self.tvConnectionManager = TvConnectionManager()
-        # self.monitor = KodiMonitor(self.tvConnectionManager)
-
-        tv = TvFactory().getTv("Sony")
-        utils.log(tv.getName())
+        self.tvConnectionManager = TvConnectionManager()
+        self.monitor = KodiMonitor(self.tvConnectionManager)
 
     def run(self):
         utils.log("Smart TV Service running")
 
-        # while not self.monitor.abortRequested() and self.tvConnectionManager.isRunning:
-        #     # Sleep/wait for abort for 2 seconds
-        #     if self.monitor.waitForAbort(2):
-        #         # Abort was requested while waiting. We should exit
-        #         utils.log("Kodi abort detected, stopping service execution")
-        #         break
-        #     self.tick()
+        while not self.monitor.abortRequested() and self.tvConnectionManager.isRunning:
+            # Sleep/wait for abort for 2 seconds
+            if self.monitor.waitForAbort(2):
+                # Abort was requested while waiting. We should exit
+                utils.log("Kodi abort detected, stopping service execution")
+                break
+            self.tick()
 
     def tick(self):
         if self.tvConnectionManager.isConnected:

@@ -8,32 +8,34 @@ class TvConnectionManager:
         self.isRunning = True
         self.isConnected = False
 
-        self.tvInput = utils.getTvInputSetting('tvInput')
-
         if not self.validateConfig():
             self.isRunning = False
             return
+
+        self.tvInput = utils.getTvInputSetting('tvInput')
 
         # TODO: Change the TV brand so be retrieved from the settings
         self.tv = TvFactory().getTv("Sony")
 
         if self.tv.isConfigured():
-            self.configureTvConnection()
-        else:
+            utils.log("tv is configured, connecting")
             self.isConnected = self.tv.connect()
+        else:
+            utils.log("tv is not configured, configuring")
+            self.configureTvConnection()
 
     # Check configuration to make sure we can make an initial connection to the TV
     def validateConfig(self):
         utils.log("Checking configuration")
-        if self.tvIp == '':
+        if utils.getSetting('tvIpAddress') == '':
             utils.log("Configuration invalid, TV IP is missing")
             utils.notificationError(utils.getString(30016))
             return False
-        if self.tvMacAddress == '':
+        if utils.getSetting('tvMacAddress') == '':
             utils.log("Configuration invalid, TV MAC is missing")
             utils.notificationError(utils.getString(30017))
             return False
-        if self.tvInput == '':
+        if utils.getTvInputSetting('tvInput') == '':
             utils.log("Configuration invalid, TV Input must be selected")
             utils.notificationError(utils.getString(30018))
             return False
