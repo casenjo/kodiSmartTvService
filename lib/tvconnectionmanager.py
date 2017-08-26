@@ -14,7 +14,7 @@ class TvConnectionManager:
 
         self.tvInput = utils.getTvInputSetting('tvInput')
 
-        self.tv = TvFactory().getTv(utils.getTvInputSetting('tvBrand'))
+        self.tv = TvFactory().getTv(utils.getTvBrandSetting('tvBrand'))
 
         if self.tv.isConfigured():
             utils.log("tv is configured, connecting")

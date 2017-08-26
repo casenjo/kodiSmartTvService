@@ -53,3 +53,11 @@ def getTvInputSetting(self):
         '3': 'HDMI 3',
         '4': 'HDMI 4'
     }.get(input, '')  # '' is default if input not found
+
+def getTvBrandSetting(self):
+    brand = getSetting('tvBrand')
+    # 0 => '', 1 => Sony, etc
+    return {
+        '0': '',
+        '1': 'Sony'
+    }.get(brand, '')  # '' is default if input not found
