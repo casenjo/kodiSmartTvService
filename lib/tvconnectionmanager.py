@@ -14,8 +14,7 @@ class TvConnectionManager:
 
         self.tvInput = utils.getTvInputSetting('tvInput')
 
-        # TODO: Change the TV brand so be retrieved from the settings
-        self.tv = TvFactory().getTv("Sony")
+        self.tv = TvFactory().getTv(utils.getTvInputSetting('tvBrand'))
 
         if self.tv.isConfigured():
             utils.log("tv is configured, connecting")
