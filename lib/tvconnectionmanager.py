@@ -1,6 +1,5 @@
 import utils
-from braviarc import BraviaRC
-
+from tv.tvfactory import TvFactory
 
 class TvConnectionManager:
 
@@ -9,142 +8,84 @@ class TvConnectionManager:
         self.isRunning = True
         self.isConnected = False
 
-        self.tvIp = utils.getSetting('tvIpAddress')
-        self.tvMacAddress = utils.getSetting('tvMacAddress')
-        self.tvPin = utils.getSetting('tvPin')
-        self.tvInput = utils.getTvInputSetting('tvInput')
-
         if not self.validateConfig():
             self.isRunning = False
             return
 
-        # TODO: This needs to be handled by a factory in order to use a generic TV instead of a specific one
-        self.tv = BraviaRC(self.tvIp, self.tvMacAddress)
+        self.tvInput = utils.getTvInputSetting('tvInput')
 
-        if self.pinIsDefault():
-            self.configureTvConnection()
+        # TODO: Change the TV brand so be retrieved from the settings
+        self.tv = TvFactory().getTv("Sony")
+
+        if self.tv.isConfigured():
+            utils.log("tv is configured, connecting")
+            self.isConnected = self.tv.connect()
         else:
-            self.isConnected = self.connectToTv(self.tvPin)
+            utils.log("tv is not configured, configuring")
+            self.configureTvConnection()
 
     # Check configuration to make sure we can make an initial connection to the TV
     def validateConfig(self):
         utils.log("Checking configuration")
-        if self.tvIp == '':
+        if utils.getSetting('tvIpAddress') == '':
             utils.log("Configuration invalid, TV IP is missing")
             utils.notificationError(utils.getString(30016))
             return False
-        if self.tvMacAddress == '':
+        if utils.getSetting('tvMacAddress') == '':
             utils.log("Configuration invalid, TV MAC is missing")
             utils.notificationError(utils.getString(30017))
             return False
-        if self.tvInput == '':
+        if utils.getTvInputSetting('tvInput') == '':
             utils.log("Configuration invalid, TV Input must be selected")
             utils.notificationError(utils.getString(30018))
             return False
         utils.log("Configuration validated")
         return True
 
-    # Check configured PIN isn't the default
-    def pinIsDefault(self):
-        return self.tvPin == "0000"
-
     # Configure TV connection
-    # TODO: Clean up code inside to be independent of Bravia-specific functions
     def configureTvConnection(self):
-        utils.log("Default PIN detected, starting configuration flow")
-        userWantsToConnect = utils.yesNoDialog(utils.getString(30011), utils.getString(30012), utils.getString(30013))
+        utils.log("Starting TV configuration")
+        userWantsToConnect = self.tv.promptForConnection()
 
         if not userWantsToConnect:
             utils.log("User denied prompt, exiting")
             self.isRunning = False
             return
 
-        utils.log("Requesting PIN from TV")
-        self.connectToTv(self.tvPin)
+        self.isConnected = self.tv.configureConnection()
 
-        pinFromTv = self.getPinFromUserPrompt()
-        if pinFromTv is False:
-            return
-
-        utils.log("PIN " + pinFromTv + " entered")
-
-        self.connectToTv(pinFromTv)
-
-        if not self.tv.is_connected():
-            utils.log("PIN incorrect, exiting")
-            utils.notificationError(utils.getString(30015))
-            self.isRunning = False
-            return
-        else:
-            utils.log("PIN correct, saving to plugin settings")
-            utils.setSetting('tvPin', pinFromTv)
-            self.tvPin = utils.getSetting('tvPin')
-            utils.log("New PIN is " + self.tvPin)
-            self.isConnected = self.connectToTv(self.tvPin)
-
-    # TODO: Clean up code inside to be independent of Bravia-specific functions and use a generic TV object
-    def connectToTv(self, pin):
+    def connectToTv(self):
         """
 
         :rtype: boolean
         """
         utils.log("Connecting to TV")
-        if not self.validatePin(pin):
-            return False
-
-        return self.tv.connect(pin, utils.addOnTvClientId, utils.getAddOnName())
-
-    # TODO: This should be inside a Bravia-specific TV class
-    def validatePin(self, pinFromTv=''):
-        return pinFromTv != '' and pinFromTv.isdigit() and len(pinFromTv) == 4
-
-    # Get a pin from the user when setting up the TV
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
-    def getPinFromUserPrompt(self):
-        pinFromTv = ''
-
-        while not self.validatePin(pinFromTv):
-            pinFromTv = utils.numberDialog(utils.getString(30014))
-            if not self.validatePin(pinFromTv):
-                userWantsToTryAgain = utils.yesNoDialog('PIN incorrect, it needs to be exactly 4 digits.', 'Try again?')
-                if not userWantsToTryAgain:
-                    break
-
-        if pinFromTv == '':
-            return False
-        else:
-            return pinFromTv
+        return self.tv.connect()
 
     # Wake up our TV
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def wakeUpTv(self):
         utils.log("Waking TV up")
         if self.tvIsOff():
-            self.tv.turn_on()
+            self.tv.turnOn()
 
     # Change our TV to the input source in our config
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def setTvToKodiInput(self):
         if self.getTvInput() != self.tvInput:
             utils.log("Setting TV to Kodi input")
-            self.tv.select_source(self.tvInput)
+            self.tv.setInput(self.tvInput)
 
     # Get our TV's input source
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def getTvInput(self):
-        playing_content = self.tv.get_playing_info()
-        return playing_content.get('title')
+        return self.tv.getInput()
 
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def tvIsOff(self):
-        return self.tv.get_power_status() == u'standby'
+        return self.tv.isOff()
 
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
     def tvIsOn(self):
-        return self.tv.get_power_status() == u'active'
+        return self.tv.isOn()
 
     def isTvSetToKodiInput(self):
         return self.getTvInput() == self.tvInput
 
     def turnOff(self):
-        return self.tv.turn_off()
+        return self.tv.turnOff()

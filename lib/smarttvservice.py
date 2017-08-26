@@ -24,4 +24,3 @@ class SmartTvService:
     def tick(self):
         if self.tvConnectionManager.isConnected:
             self.monitor.checkIfTimeToSleep()
-
