@@ -14,6 +14,7 @@ class TvConnectionManager:
             self.isRunning = False
             return
 
+        # TODO: Change the TV brand so be retrieved from the settings
         self.tv = TvFactory().getTv("Sony")
 
         if self.tv.isConfigured():
