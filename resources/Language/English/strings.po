@@ -87,3 +87,11 @@ msgstr "TV MAC address not configured"
 msgctxt "#30018"
 msgid "TV Input must be selected"
 msgstr "TV Input must be selected"
+
+msgctxt "#30019"
+msgid "TV Brand"
+msgstr "TV Brand"
+
+msgctxt "#30020"
+msgid "Sony"
+msgstr "Sony"

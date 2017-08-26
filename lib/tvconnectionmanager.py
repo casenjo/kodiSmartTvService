@@ -28,15 +28,19 @@ class TvConnectionManager:
     def validateConfig(self):
         utils.log("Checking configuration")
         if utils.getSetting('tvIpAddress') == '':
-            utils.log("Configuration invalid, TV IP is missing")
+            utils.log("Configuration invalid, TV IP address is missing")
             utils.notificationError(utils.getString(30016))
             return False
         if utils.getSetting('tvMacAddress') == '':
-            utils.log("Configuration invalid, TV MAC is missing")
+            utils.log("Configuration invalid, TV MAC address is missing")
             utils.notificationError(utils.getString(30017))
             return False
         if utils.getTvInputSetting('tvInput') == '':
-            utils.log("Configuration invalid, TV Input must be selected")
+            utils.log("Configuration invalid, TV input must be selected")
+            utils.notificationError(utils.getString(30018))
+            return False
+        if utils.getTvInputSetting('tvBrand') == '':
+            utils.log("Configuration invalid, TV brand must be selected")
             utils.notificationError(utils.getString(30018))
             return False
         utils.log("Configuration validated")
