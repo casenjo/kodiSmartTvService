@@ -1,5 +1,5 @@
 import utils
-
+from tv.tvfactory import TvFactory
 
 class TvConnectionManager:
 
@@ -8,22 +8,18 @@ class TvConnectionManager:
         self.isRunning = True
         self.isConnected = False
 
-        self.tvIp = utils.getSetting('tvIpAddress')
-        self.tvMacAddress = utils.getSetting('tvMacAddress')
-        self.tvPin = utils.getSetting('tvPin')
         self.tvInput = utils.getTvInputSetting('tvInput')
 
         if not self.validateConfig():
             self.isRunning = False
             return
 
-        # TODO: This needs to be handled by a factory in order to use a generic TV instead of a specific one
-        self.tv = BraviaRC(self.tvIp, self.tvMacAddress)
+        self.tv = TvFactory().getTv("Sony")
 
-        if self.pinIsDefault():
+        if self.tv.isConfigured():
             self.configureTvConnection()
         else:
-            self.isConnected = self.connectToTv(self.tvPin)
+            self.isConnected = self.tv.connect()
 
     # Check configuration to make sure we can make an initial connection to the TV
     def validateConfig(self):
@@ -43,76 +39,25 @@ class TvConnectionManager:
         utils.log("Configuration validated")
         return True
 
-    # Check configured PIN isn't the default
-    def pinIsDefault(self):
-        return self.tvPin == "0000"
-
     # Configure TV connection
-    # TODO: Clean up code inside to be independent of Bravia-specific functions
     def configureTvConnection(self):
-        utils.log("Default PIN detected, starting configuration flow")
-        userWantsToConnect = utils.yesNoDialog(utils.getString(30011), utils.getString(30012), utils.getString(30013))
+        utils.log("Starting TV configuration")
+        userWantsToConnect = self.tv.promptForConnection()
 
         if not userWantsToConnect:
             utils.log("User denied prompt, exiting")
             self.isRunning = False
             return
 
-        utils.log("Requesting PIN from TV")
-        self.connectToTv(self.tvPin)
+        self.isConnected = self.tv.configureConnection()
 
-        pinFromTv = self.getPinFromUserPrompt()
-        if pinFromTv is False:
-            return
-
-        utils.log("PIN " + pinFromTv + " entered")
-
-        self.connectToTv(pinFromTv)
-
-        if not self.tv.is_connected():
-            utils.log("PIN incorrect, exiting")
-            utils.notificationError(utils.getString(30015))
-            self.isRunning = False
-            return
-        else:
-            utils.log("PIN correct, saving to plugin settings")
-            utils.setSetting('tvPin', pinFromTv)
-            self.tvPin = utils.getSetting('tvPin')
-            utils.log("New PIN is " + self.tvPin)
-            self.isConnected = self.connectToTv(self.tvPin)
-
-    # TODO: Clean up code inside to be independent of Bravia-specific functions and use a generic TV object
-    def connectToTv(self, pin):
+    def connectToTv(self):
         """
 
         :rtype: boolean
         """
         utils.log("Connecting to TV")
-        if not self.validatePin(pin):
-            return False
-
-        return self.tv.connect(pin, utils.addOnTvClientId, utils.getAddOnName())
-
-    # TODO: This should be inside a Bravia-specific TV class
-    def validatePin(self, pinFromTv=''):
-        return pinFromTv != '' and pinFromTv.isdigit() and len(pinFromTv) == 4
-
-    # Get a pin from the user when setting up the TV
-    # TODO: This is too specific to Bravia TVs, part of it should be moved to a Bravia specific class and use a generic getTvSource method to get it instead
-    def getPinFromUserPrompt(self):
-        pinFromTv = ''
-
-        while not self.validatePin(pinFromTv):
-            pinFromTv = utils.numberDialog(utils.getString(30014))
-            if not self.validatePin(pinFromTv):
-                userWantsToTryAgain = utils.yesNoDialog('PIN incorrect, it needs to be exactly 4 digits.', 'Try again?')
-                if not userWantsToTryAgain:
-                    break
-
-        if pinFromTv == '':
-            return False
-        else:
-            return pinFromTv
+        return self.tv.connect()
 
     # Wake up our TV
     def wakeUpTv(self):
