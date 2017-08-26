@@ -84,4 +84,4 @@ class TvSony: # implements TV contract
         return pinFromTv != '' and pinFromTv.isdigit() and len(pinFromTv) == 4
 
     def isConfigured(self):
-        return utils.getSetting('tvPin') == "0000"
+        return utils.getSetting('tvPin') != "0000"
